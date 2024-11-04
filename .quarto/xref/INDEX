@@ -1,0 +1,23 @@
+{
+  "index.qmd": {
+    "index.html": "f31f9efb"
+  },
+  "intro.qmd": {
+    "intro.html": "7fbfa7f0"
+  },
+  "summary.qmd": {
+    "summary.html": "3e559434"
+  },
+  "references.qmd": {
+    "references.html": "fb9d5b81"
+  },
+  "Ch1-金融数据及其特征.qmd": {
+    "Ch1-金融数据及其特征.html": "1687aa66"
+  },
+  "Ch1/1-金融数据及其特征.qmd": {
+    "1-金融数据及其特征.html": "5fc9f3ec"
+  },
+  "Ch2/2-线性时间序列模型.qmd": {
+    "2-线性时间序列模型.html": "3a3e7233"
+  }
+}
