@@ -2,6 +2,42 @@
 
 ## 介绍
 
+课程采用蔡瑞胸（Ruey S. Tsay）的《金融数据分析导论：基于R语言》([Tsay 2013](https://www.math.pku.edu.cn/teachers/lidf/course/fts/ftsnotes/html/_ftsnotes/fts-tslin.html#ref-Tsay13:IAFD)) （An Introduction to Analysis of Financial Data with R）作为主要教材之一。 “线性时间序列模型”这一部分是教材的第二章和第三章的授课笔记， 本章讲授时间序列的线性模型，包括：
+
+-   一些基本概念
+-   AR, MA, ARMA模型
+-   单位根过程
+-   指数平滑
+-   季节模型
+-   回归模型中误差项有序列相关的处理
+-   长记忆的分数阶差分模型
+-   模型比较
+-   实例分析
+
+### 例子：可口可乐公司盈利数据
+
+序列仍体现出缓慢的、非单调的上升趋势，又有明显的每年的周期变化（称为季节性）， 还有短期的波动：
+
+```{python}
+{{< include _sample_cola_1.py >}}
+{{< include _sample_cola_2.py >}}
+```
+
+标出不同季节的数据点，可以看出，每年一般冬季和春季最低， 夏季最高，秋季介于夏季和冬季之间：
+
+```{python}
+{{< include _sample_cola_1.py >}}
+{{< include _sample_cola_3.py >}}
+```
+
+### 例子：标普500指数月对数收益率
+
+收益率在0上下波动，除了个别时候基本在某个波动范围之内：
+
+```{python}
+{{< include _sample_sp.py >}}
+```
+
 ## 平稳性
 
 ## 相关系数和自相关系数
