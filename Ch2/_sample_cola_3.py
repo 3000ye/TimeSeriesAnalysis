@@ -6,7 +6,7 @@ data['Quarter'] = data.index.quarter
 
 cpal = ['green', 'red', 'yellow', 'black']
 
-plt.figure(figsize=(6, 6))
+plt.figure(figsize=(8, 8))
 
 plt.plot(data.index, data['value'], label='Coca Kola Quarterly Return', color='gray')
 

@@ -1,0 +1,7 @@
+plt.figure(figsize=(8, 4))
+plt.scatter(data["sp"], data['ibm'], label='S&P 500 Monthly Returns', color='green')
+plt.xlabel("S&P", fontsize=14)
+plt.ylabel("IBM", fontsize=14)
+plt.grid(True)
+plt.legend()
+plt.show()

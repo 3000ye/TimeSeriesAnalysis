@@ -1,0 +1,6 @@
+plt.figure(figsize=(8, 4))
+plt.plot(data["date"], data['sp'], label='S&P 500 Monthly Returns', color='green')
+plt.title('S&P 500 Monthly Returns', fontsize=16)
+plt.grid(True)
+plt.legend()
+plt.show()

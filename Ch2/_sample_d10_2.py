@@ -1,0 +1,6 @@
+plt.figure(figsize=(8, 4))
+plt.plot(data["dec10"], label='CRSP Lower 10% Monthly Returns', color="green")
+plt.title('CRSP Lower 10% Monthly Returns')
+plt.ylabel('d10')
+plt.legend()
+plt.show()
