@@ -104,6 +104,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -178,7 +207,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#例子标普500指数月对数收益率" id="toc-例子标普500指数月对数收益率" class="nav-link" data-scroll-target="#例子标普500指数月对数收益率"><span class="header-section-number">2.1.2</span> 例子：标普500指数月对数收益率</a></li>
   </ul></li>
   <li><a href="#平稳性" id="toc-平稳性" class="nav-link" data-scroll-target="#平稳性"><span class="header-section-number">2.2</span> 平稳性</a></li>
-  <li><a href="#相关系数和自相关系数" id="toc-相关系数和自相关系数" class="nav-link" data-scroll-target="#相关系数和自相关系数"><span class="header-section-number">2.3</span> 相关系数和自相关系数</a></li>
+  <li><a href="#相关系数和自相关系数" id="toc-相关系数和自相关系数" class="nav-link" data-scroll-target="#相关系数和自相关系数"><span class="header-section-number">2.3</span> 相关系数和自相关系数</a>
+  <ul class="collapse">
+  <li><a href="#相关系数" id="toc-相关系数" class="nav-link" data-scroll-target="#相关系数"><span class="header-section-number">2.3.1</span> 相关系数</a></li>
+  <li><a href="#自相关函数与白噪声" id="toc-自相关函数与白噪声" class="nav-link" data-scroll-target="#自相关函数与白噪声"><span class="header-section-number">2.3.2</span> 自相关函数与白噪声</a></li>
+  </ul></li>
   <li><a href="#线性时间序列" id="toc-线性时间序列" class="nav-link" data-scroll-target="#线性时间序列"><span class="header-section-number">2.4</span> 线性时间序列</a></li>
   <li><a href="#附录补充知识" id="toc-附录补充知识" class="nav-link" data-scroll-target="#附录补充知识"><span class="header-section-number">2.5</span> 附录：补充知识</a></li>
   </ul>
@@ -223,7 +256,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="例子可口可乐公司盈利数据" class="level3" data-number="2.1.1">
 <h3 data-number="2.1.1" class="anchored" data-anchor-id="例子可口可乐公司盈利数据"><span class="header-section-number">2.1.1</span> 例子：可口可乐公司盈利数据</h3>
 <p>序列仍体现出缓慢的、非单调的上升趋势，又有明显的每年的周期变化（称为季节性）， 还有短期的波动：</p>
-<div id="7ee664e6" class="cell" data-execution_count="1">
+<div id="fe14efe4" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -243,7 +276,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"anntime"</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">"anntime"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"%Y%m</span><span class="sc">%d</span><span class="st">"</span>)</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"value"</span>] <span class="op">=</span> pd.to_numeric(data[<span class="st">"value"</span>])</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">3</span>))</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>))</span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>plt.plot(data[<span class="st">"pends"</span>], data[<span class="st">'value'</span>], label<span class="op">=</span><span class="st">'Coca Kola Quarterly Return'</span>, color<span class="op">=</span><span class="st">'green'</span>)</span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Coca Kola Quarterly Return'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
@@ -253,13 +286,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="2-线性时间序列模型_files/figure-html/cell-2-output-1.png" width="496" height="288" class="figure-img"></p>
+<p><img src="2-线性时间序列模型_files/figure-html/cell-2-output-1.png" width="645" height="362" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>标出不同季节的数据点，可以看出，每年一般冬季和春季最低， 夏季最高，秋季介于夏季和冬季之间：</p>
-<div id="f117dca7" class="cell" data-execution_count="2">
+<div id="64b6e90b" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -287,7 +320,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>cpal <span class="op">=</span> [<span class="st">'green'</span>, <span class="st">'red'</span>, <span class="st">'yellow'</span>, <span class="st">'black'</span>]</span>
 <span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">6</span>))</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">8</span>))</span>
 <span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>plt.plot(data.index, data[<span class="st">'value'</span>], label<span class="op">=</span><span class="st">'Coca Kola Quarterly Return'</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
 <span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
@@ -307,7 +340,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="2-线性时间序列模型_files/figure-html/cell-3-output-1.png" width="496" height="510" class="figure-img"></p>
+<p><img src="2-线性时间序列模型_files/figure-html/cell-3-output-1.png" width="645" height="657" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -316,7 +349,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="例子标普500指数月对数收益率" class="level3" data-number="2.1.2">
 <h3 data-number="2.1.2" class="anchored" data-anchor-id="例子标普500指数月对数收益率"><span class="header-section-number">2.1.2</span> 例子：标普500指数月对数收益率</h3>
 <p>收益率在0上下波动，除了个别时候基本在某个波动范围之内：</p>
-<div id="9de6e539" class="cell" data-execution_count="3">
+<div id="91c6ae94" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -336,7 +369,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"sp"</span>] <span class="op">=</span> pd.to_numeric(data[<span class="st">"sp"</span>])</span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>data.head()</span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">3</span>))</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>))</span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>plt.plot(data[<span class="st">"date"</span>], data[<span class="st">'sp'</span>], label<span class="op">=</span><span class="st">'S&amp;P 500 Monthly Returns'</span>, color<span class="op">=</span><span class="st">'green'</span>)</span>
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'S&amp;P 500 Monthly Returns'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
@@ -346,7 +379,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="2-线性时间序列模型_files/figure-html/cell-4-output-1.png" width="507" height="288" class="figure-img"></p>
+<p><img src="2-线性时间序列模型_files/figure-html/cell-4-output-1.png" width="656" height="362" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -355,9 +388,207 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="平稳性" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="平稳性"><span class="header-section-number">2.2</span> 平稳性</h2>
+<p><a href="#例子标普500指数月对数收益率">例子：标普500指数月对数收益率</a>所展示的收益率曲线基本呈现一个在水平线（一般是 0）上下波动，且波动范围基本不变，这样的表现是时间序列【弱平稳序列】的表现。</p>
+<p><a href="#例子可口可乐公司盈利数据">例子：可口可乐公司盈利数据</a>所展示的价格曲线呈现出水平的上下起伏，如果分成几段的话，各段的平均值差距较大，这表现出拍【非平稳】的特性。</p>
+<p><strong>时间序列</strong>：设有随机变量序列 <span class="math inline">\(\{x_t,t=\ldots,-2,-1,0,1,2,\ldots\}\)</span>,称其为一个时间序列。其中<span class="math inline">\(x_t\)</span>是一个随机变量，也可以写成大写的<span class="math inline">\(X_t\)</span>。时间序列<span class="math inline">\(\{X_t\}\)</span>严格来说是一个二元的函数 <span class="math inline">\(X(t,\omega),t\in\mathbb{Z}(\mathbb{Z}\)</span>表示所有整数组成的集合), <span class="math inline">\(\omega \in \Omega\)</span>, <span class="math inline">\(\Omega\)</span>表示在一定的条件下所有可能的试验结果的集合。经济和金融中的时间序列我们只能观察到其中某一个<span class="math inline">\(\omega_0\in\Omega\)</span>对应的结果，称为一条“轨道”。而针对随机变量的许多理论性质都是在<span class="math inline">\(\omega\in\Omega\)</span>上讨论的，比如<span class="math inline">\(EX_t=\int X_t(\omega)P(d\omega)\)</span>是<span class="math inline">\(X_t(\omega)\)</span>对<span class="math inline">\(\omega\in\Omega\)</span>的平均。</p>
+<p>为了能够用一条轨道的观测样本得到所有<span class="math inline">\(\omega\in\Omega\)</span>的性质，需要时间序列满足“遍历性”。</p>
+<p>时间序列的样本：设<span class="math inline">\(\{x_t,t=1,2,\ldots,T\}\)</span>是时间序列中的一段。仍将<span class="math inline">\(x_t\)</span>看成随机变量，也可以写成大写 的<span class="math inline">\(X_t\)</span>。如果有了具体数值，那么样本就是一条轨道中的一段。</p>
+<p><strong>自协方差函数</strong>：时间序列<span class="math inline">\(\{X_t\}\)</span>中两个随机变量的协方差 <span class="math inline">\(Cov(X_s,X_t)\)</span>叫做自协方差。如果 <span class="math inline">\(Cov(X_s,X_t)=\gamma_{|t-s|}\)</span>仅依赖于<span class="math inline">\(t-s\)</span>,则称 <span class="math display">\[\gamma_k=\mathrm{Cov}(X_{t-k},X_t),k=0,1,2,\ldots \]</span></p>
+<p>为时间序列<span class="math inline">\(\{X_t\}\)</span>的自协方差函数。因为Cov<span class="math inline">\(( X_s, X_t) =\)</span>Cov<span class="math inline">\(( X_t, X_s)\)</span>, 所以<span class="math inline">\(\gamma_{-k}=\gamma_k\)</span>。易见 <span class="math inline">\(\gamma_0=\mathrm{Var}(X_t)\)</span>。</p>
+<p>由Cauchy-Schwartz不等式： <span class="math display">\[|\gamma_k|=|E[(X_{t-k}-\mu)(X_t-\mu)]|\leq\left(E(X_{t-k}-\mu)^2\:E(X_t-\mu)^2\right)^{1/2}=\gamma_0\]</span></p>
+<p><strong>弱平稳序列</strong>(宽平稳序列，weakly stationary time series): 如果时间序列<span class="math inline">\(\{X_t\}\)</span>存在有限的二阶矩且满足：</p>
+<ol type="1">
+<li><span class="math inline">\(EX_t= \mu\)</span>与<span class="math inline">\(t\)</span>无关；</li>
+<li><span class="math inline">\(\mathrm{Var}(X_t)=\gamma_0\)</span>与<span class="math inline">\(t\)</span>无关；</li>
+<li><span class="math inline">\(\gamma _{k}=\)</span>Cov<span class="math inline">\(( X_t- k, X_{t})\)</span>, <span class="math inline">\(k= 1, 2, \ldots\)</span>与<span class="math inline">\(t\)</span>无关，</li>
+</ol>
+<p>则称<span class="math inline">\(\{X_t\}\)</span>为弱平稳序列。</p>
+<p>适当条件下可以用时间序列的样本估计自协方差函数，这是用一条轨道的信息推断所有实验结果<span class="math inline">\(\Omega\)</span>,估计公 式为： <span class="math display">\[\hat{\gamma}_k=\frac{1}{T}\sum_{t=k+1}^T(x_{t-k}-\bar{x})(x_t-\bar{x}),k=0,1,\ldots,T-1\]</span></p>
+<p>称<span class="math inline">\(\hat{\gamma}_k\)</span>为样本自协方差。 注意这里用了<span class="math inline">\(1/T\)</span>而不是<span class="math inline">\(1/(T-k)\)</span>,用<span class="math inline">\(1/(T-k)\)</span>在获得无偏性的同时会造成一 些理论上的困难。</p>
 </section>
 <section id="相关系数和自相关系数" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="相关系数和自相关系数"><span class="header-section-number">2.3</span> 相关系数和自相关系数</h2>
+<section id="相关系数" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="相关系数"><span class="header-section-number">2.3.1</span> 相关系数</h3>
+<div id="ca34061a" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> []</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../ftsdata/m-ibmsp-2611.txt"</span>, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> line <span class="kw">in</span> <span class="bu">file</span>.readlines():</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> line.strip(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>).strip(<span class="st">" "</span>).replace(<span class="st">"</span><span class="ch">\t</span><span class="st">"</span>, <span class="st">" "</span>).split(<span class="st">" "</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> <span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> x: x <span class="op">!=</span> <span class="st">""</span>, line))</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        raw_data.append(line)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame(raw_data[<span class="dv">1</span>:], columns<span class="op">=</span>raw_data[<span class="dv">0</span>])</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"date"</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">"date"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"%Y%m</span><span class="sc">%d</span><span class="st">"</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"ibm"</span>] <span class="op">=</span> pd.to_numeric(data[<span class="st">"ibm"</span>])</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"sp"</span>] <span class="op">=</span> pd.to_numeric(data[<span class="st">"sp"</span>])</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>data.head()</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>))</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>plt.scatter(data[<span class="st">"sp"</span>], data[<span class="st">'ibm'</span>], label<span class="op">=</span><span class="st">'S&amp;P 500 Monthly Returns'</span>, color<span class="op">=</span><span class="st">'green'</span>)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"S&amp;P"</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"IBM"</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2-线性时间序列模型_files/figure-html/cell-5-output-1.png" width="680" height="363" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>上图是IBM股票月度简单收益率对标普500收益率的散点图，可以看出两者有明显的正向相关关系。</p>
+<p>两个随机变量<span class="math inline">\(X\)</span>和<span class="math inline">\(Y\)</span>的相关系数定义为：</p>
+<p><span class="math display">\[\rho(X,Y)=\rho_{xy}=\dfrac{\mathrm{Cov}(X,Y)}{\sqrt{\mathrm{Var}(X)\mathrm{Var}(Y)}}=\dfrac{E[(X-\mu_x)(Y-\mu_y)]}{\sqrt{E(X-\mu_x)^2E(Y-\mu_y)^2}}\]</span></p>
+<p>如果有<span class="math inline">\((X,Y)\)</span>的独立同分布样本<span class="math inline">\(( x_t, y_t)\)</span>, <span class="math inline">\(t= 1, 2, \ldots , T\)</span>, 可估计相关系数（皮尔逊，Pearson）为：</p>
+<p><span class="math display">\[\hat{\rho}_{xy}=\frac{\sum_{t=1}^T(x_t-\bar{x})(y_t-\bar{y})}{\sqrt{\sum_{t=1}^T(x_t-\bar{x})^2\sum_{t=1}^T(y_t-\bar{y})^2}}\]</span></p>
+<p>对于不独立的样本，比如时间序列样本，也可以计算相关系数，其估计合理性需要一些模型假设。 对于联合分布非正态的情况，有时相关系数不能很好地反映<span class="math inline">\(X\)</span>和<span class="math inline">\(Y\)</span>的正向或者负向的相关。 斯皮尔曼 (Spearman) 相关系数是计算<span class="math inline">\(X\)</span>的样本的秩(名次)与<span class="math inline">\(Y\)</span>的样本的秩之间的相关系数，也称为Spearmam rank correlation。</p>
+<p>另一种常用的非参数相关系数是肯德尔tau(Kendall’s <span class="math inline">\(\tau)\)</span>系数，反映了一致数对和非一致数对之间的差别。 对随机向量<span class="math inline">\((X,Y)\)</span>,设<span class="math inline">\((X_1,Y_1),(X_2,Y_2)\)</span>相互独立且联合分布与<span class="math inline">\((X,Y)\)</span>联合分布相同，定义<span class="math inline">\(X\)</span>和<span class="math inline">\(Y\)</span>的肯 德尔tau系数为：</p>
+<p><span class="math display">\[\tau=P\left[(X_1-X_2)(Y_1-Y_2)&gt;0\right]-P\left[(X_1-X_2)(Y_1-Y_2)&lt;0\right]\]</span></p>
+<p>即两个观测的分量次序一致的概率减去分量次序相反的概率。一致的概率越大，说明两个的正向相关性越 强。</p>
+<p>对 IBM 收益率与标普收益率数据计算这三种相关系数：</p>
+<div id="90f21e62" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> []</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../ftsdata/m-ibmsp-2611.txt"</span>, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> line <span class="kw">in</span> <span class="bu">file</span>.readlines():</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> line.strip(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>).strip(<span class="st">" "</span>).replace(<span class="st">"</span><span class="ch">\t</span><span class="st">"</span>, <span class="st">" "</span>).split(<span class="st">" "</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> <span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> x: x <span class="op">!=</span> <span class="st">""</span>, line))</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        raw_data.append(line)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame(raw_data[<span class="dv">1</span>:], columns<span class="op">=</span>raw_data[<span class="dv">0</span>])</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"date"</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">"date"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"%Y%m</span><span class="sc">%d</span><span class="st">"</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"ibm"</span>] <span class="op">=</span> pd.to_numeric(data[<span class="st">"ibm"</span>])</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"sp"</span>] <span class="op">=</span> pd.to_numeric(data[<span class="st">"sp"</span>])</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>data.head()</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>pearson_corr <span class="op">=</span> data[<span class="st">'ibm'</span>].corr(data[<span class="st">'sp'</span>])</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>spearman_corr <span class="op">=</span> data[<span class="st">'ibm'</span>].corr(data[<span class="st">'sp'</span>], method<span class="op">=</span><span class="st">'spearman'</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>kendall_corr <span class="op">=</span> data[<span class="st">'ibm'</span>].corr(data[<span class="st">'sp'</span>], method<span class="op">=</span><span class="st">'kendall'</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Pearson correlation:"</span>, pearson_corr)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Spearman correlation:"</span>, spearman_corr)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Kendall correlation:"</span>, kendall_corr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Pearson correlation: 0.6395978546773113
+Spearman correlation: 0.6065788974589758
+Kendall correlation: 0.4328065703413303</code></pre>
+</div>
+</div>
+</section>
+<section id="自相关函数与白噪声" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="自相关函数与白噪声"><span class="header-section-number">2.3.2</span> 自相关函数与白噪声</h3>
+<p>设<span class="math inline">\(\{X_t\}\)</span>为弱平稳序列，<span class="math inline">\(\{\gamma_k\}\)</span>为自协方差函数。则</p>
+<p><span class="math display">\[\rho(X_{t-k},X_t)=\frac{\operatorname{Cov}(X_{t-k},X_t)}{\sqrt{\operatorname{Var}(X_{t-k})\operatorname{Var}(X_t)}}=\frac{\gamma_k}{\sqrt{\gamma_0\gamma_0}}=\frac{\gamma_k}{\gamma_0},\:k=0,1,\ldots,\:\forall t\]</span></p>
+<p>记<span class="math inline">\(\rho_k=\gamma_k/\gamma_0\)</span>, 这是<span class="math inline">\(X_t-k\)</span>与<span class="math inline">\(X_t\)</span>的相关系数且与<span class="math inline">\(t\)</span>无关，称<span class="math inline">\(\{\rho_k,k=0,1,\ldots\}\)</span>为时间序列<span class="math inline">\(\{X_t\}\)</span>的自相关函数 (Autocorrelation function, ACF)。<span class="math inline">\(\rho_0=1\)</span>。</p>
+<p>如果弱平稳序列<span class="math inline">\(\{X_t\}\)</span>满足<span class="math inline">\(\rho_k=0,k=1,2,\ldots\)</span>, 称<span class="math inline">\(\{X_t\}\)</span>为<strong>白噪声序列</strong>。如果随机变量序列<span class="math inline">\(\{X_t\}\)</span>独立且期望和方差不随时间而变，则<span class="math inline">\(\{X_t\}\)</span>是白噪声序列，称为独立白噪声。如果独立白噪声还是同分布的，称为独立同分布白噪声。</p>
+<p>适当条件下<span class="math inline">\(\rho_k\)</span>可以从时间序列样本估计为：</p>
+<p><span class="math display">\[\hat{\rho}_k=\frac{\hat{\gamma}_k}{\hat{\gamma}_0},\:k=0,1,\ldots \]</span></p>
+<p><span class="math inline">\(\hat{\rho}_0=1\)</span>。称<span class="math inline">\(\hat{\rho}_k,k=1,2,\ldots\)</span>为<strong>样本自相关函数</strong>。</p>
+<p>如果时间序列严平稳遍历，则<span class="math inline">\(\hat{\rho}_k\)</span>是<span class="math inline">\(\rho_k\)</span>的强相合估计。</p>
+<p>若<span class="math inline">\(\{X_t\}\)</span>为有二阶矩的独立同分布随机变量列，则 <span class="math inline">\(\hat{\rho}_k(k&gt;0)\)</span>渐近服从N<span class="math inline">\((0,\frac1T)\)</span>。</p>
+<p>如果<span class="math inline">\(\{\varepsilon_t\}\)</span>是零均值独立同分布白噪声，<span class="math inline">\(q\)</span>为非负整数，<span class="math inline">\(\{\psi_j,j=0,1,\ldots,q\}\)</span>是数列，<span class="math inline">\(\psi_0=1\)</span>, <span class="math display">\[X_t=\mu+\sum_{j=0}^q\psi_j\varepsilon_{t-j},\:t\in\mathbb{Z},\]</span></p>
+<p>则从<span class="math inline">\(\{X_t,t=1,\ldots,T\}\)</span>计算的ACF满足：当<span class="math inline">\(k&gt;q\)</span>时，<span class="math inline">\(\sqrt T\hat{\rho}_k\)</span>渐近服从<span class="math inline">\(\mathbb{N}(0,1+2\sum_{j=0}^q\rho_j^2)\)</span>,这称为Bartlett公式。</p>
+<section id="例子crsp的第10分位组合的月对数收益率" class="level4" data-number="2.3.2.1">
+<h4 data-number="2.3.2.1" class="anchored" data-anchor-id="例子crsp的第10分位组合的月对数收益率"><span class="header-section-number">2.3.2.1</span> 例子：CRSP的第10分位组合的月对数收益率</h4>
+<p>第10分位组合是NYSE、AMEX、NASDAQ市值最小的10%股票组成的投资组合， 每年都重新调整。</p>
+<ul>
+<li>CRSP是Center for Research in Security Prices, 位于Chicago Booth。</li>
+<li>NYSE(The New York Stock Exchange, 纽约证券交易所),</li>
+<li>AMEX(American Stock Exchange, 美国证券交易所，在纽约华尔街附近)，</li>
+<li>NASDAQ(National Association of Securities Dealers Automated Quotations，纳斯达克，位于纽约)。</li>
+</ul>
+<div id="4c52a8f4" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> []</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../ftsdata/m-dec12910.txt"</span>, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> line <span class="kw">in</span> <span class="bu">file</span>.readlines():</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> line.strip(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>).strip(<span class="st">" "</span>).replace(<span class="st">"</span><span class="ch">\t</span><span class="st">"</span>, <span class="st">" "</span>).split(<span class="st">" "</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> <span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> x: x <span class="op">!=</span> <span class="st">""</span>, line))</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        raw_data.append(line)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame(raw_data[<span class="dv">1</span>:], columns<span class="op">=</span>raw_data[<span class="dv">0</span>])</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"date"</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">"date"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"%Y%m</span><span class="sc">%d</span><span class="st">"</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>data.set_index(<span class="st">"date"</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.<span class="bu">apply</span>(pd.to_numeric)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>data.head()</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>))</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>plt.plot(data[<span class="st">"dec10"</span>], label<span class="op">=</span><span class="st">'CRSP Lower 10% Monthly Returns'</span>, color<span class="op">=</span><span class="st">"green"</span>)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'CRSP Lower 10% Monthly Returns'</span>)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'d10'</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2-线性时间序列模型_files/figure-html/cell-7-output-1.png" width="674" height="357" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>绘制时间序列的自相关函数图：</p>
+<div id="e6d05f31" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> []</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../ftsdata/m-dec12910.txt"</span>, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> line <span class="kw">in</span> <span class="bu">file</span>.readlines():</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> line.strip(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>).strip(<span class="st">" "</span>).replace(<span class="st">"</span><span class="ch">\t</span><span class="st">"</span>, <span class="st">" "</span>).split(<span class="st">" "</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> <span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> x: x <span class="op">!=</span> <span class="st">""</span>, line))</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        raw_data.append(line)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame(raw_data[<span class="dv">1</span>:], columns<span class="op">=</span>raw_data[<span class="dv">0</span>])</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"date"</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">"date"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"%Y%m</span><span class="sc">%d</span><span class="st">"</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>data.set_index(<span class="st">"date"</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.<span class="bu">apply</span>(pd.to_numeric)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>data.head()</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>))</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>plot_acf(data[<span class="st">"dec10"</span>])</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'ACF of CRSP Lower 10% Monthly Returns'</span>)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;Figure size 768x384 with 0 Axes&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2-线性时间序列模型_files/figure-html/cell-8-output-2.png" width="590" height="431" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
 </section>
 <section id="线性时间序列" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="线性时间序列"><span class="header-section-number">2.4</span> 线性时间序列</h2>
