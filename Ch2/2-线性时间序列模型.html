@@ -256,7 +256,7 @@ window.Quarto = {
 <section id="例子可口可乐公司盈利数据" class="level3" data-number="2.1.1">
 <h3 data-number="2.1.1" class="anchored" data-anchor-id="例子可口可乐公司盈利数据"><span class="header-section-number">2.1.1</span> 例子：可口可乐公司盈利数据</h3>
 <p>序列仍体现出缓慢的、非单调的上升趋势，又有明显的每年的周期变化（称为季节性）， 还有短期的波动：</p>
-<div id="eff71e3a" class="cell" data-execution_count="1">
+<div id="c9b59849" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -292,7 +292,7 @@ window.Quarto = {
 </div>
 </div>
 <p>标出不同季节的数据点，可以看出，每年一般冬季和春季最低， 夏季最高，秋季介于夏季和冬季之间：</p>
-<div id="13550d20" class="cell" data-execution_count="2">
+<div id="4c49a4d9" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -349,7 +349,7 @@ window.Quarto = {
 <section id="例子标普500指数月对数收益率" class="level3" data-number="2.1.2">
 <h3 data-number="2.1.2" class="anchored" data-anchor-id="例子标普500指数月对数收益率"><span class="header-section-number">2.1.2</span> 例子：标普500指数月对数收益率</h3>
 <p>收益率在0上下波动，除了个别时候基本在某个波动范围之内：</p>
-<div id="8770dc36" class="cell" data-execution_count="3">
+<div id="5654ca1a" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -410,7 +410,7 @@ window.Quarto = {
 <h2 data-number="2.3" class="anchored" data-anchor-id="相关系数和自相关系数"><span class="header-section-number">2.3</span> 相关系数和自相关系数</h2>
 <section id="相关系数" class="level3" data-number="2.3.1">
 <h3 data-number="2.3.1" class="anchored" data-anchor-id="相关系数"><span class="header-section-number">2.3.1</span> 相关系数</h3>
-<div id="0387a4b6" class="cell" data-execution_count="4">
+<div id="58b85de3" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -456,7 +456,7 @@ window.Quarto = {
 <p><span class="math display">\[\tau=P\left[(X_1-X_2)(Y_1-Y_2)&gt;0\right]-P\left[(X_1-X_2)(Y_1-Y_2)&lt;0\right]\]</span></p>
 <p>即两个观测的分量次序一致的概率减去分量次序相反的概率。一致的概率越大，说明两个的正向相关性越 强。</p>
 <p>对 IBM 收益率与标普收益率数据计算这三种相关系数：</p>
-<div id="fb2908ef" class="cell" data-execution_count="5">
+<div id="0759f6f6" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -513,7 +513,7 @@ Kendall correlation: 0.4328065703413303</code></pre>
 <li>AMEX(American Stock Exchange, 美国证券交易所，在纽约华尔街附近)，</li>
 <li>NASDAQ(National Association of Securities Dealers Automated Quotations，纳斯达克，位于纽约)。</li>
 </ul>
-<div id="97be75d0" class="cell" data-execution_count="6">
+<div id="6e9a3ac6" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -549,7 +549,7 @@ Kendall correlation: 0.4328065703413303</code></pre>
 </div>
 </div>
 <p>绘制时间序列的自相关函数图（ACF）：</p>
-<div id="f1fec2b9" class="cell" data-execution_count="7">
+<div id="f2f93926" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
