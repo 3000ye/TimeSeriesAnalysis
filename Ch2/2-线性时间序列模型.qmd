@@ -155,14 +155,12 @@ $$X_t=\mu+\sum_{j=0}^q\psi_j\varepsilon_{t-j},\:t\in\mathbb{Z},$$
 {{< include _sample_d10_2.py >}}
 ```
 
-绘制时间序列的自相关函数图：
+绘制时间序列的自相关函数图（ACF）：
 
 ```{python}
 {{< include _sample_d10_1.py >}}
 {{< include _sample_d10_3.py >}}
 ```
-
-
 
 ## 线性时间序列
 
