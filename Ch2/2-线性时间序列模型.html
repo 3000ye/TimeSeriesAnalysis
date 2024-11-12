@@ -64,6 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../Ch3/3-自回归模型.html" rel="next">
 <link href="../Ch1/1-金融数据及其特征.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -191,6 +192,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">线性时间序列模型</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Ch3/3-自回归模型.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">自回归模型</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -211,6 +218,8 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#相关系数" id="toc-相关系数" class="nav-link" data-scroll-target="#相关系数"><span class="header-section-number">2.3.1</span> 相关系数</a></li>
   <li><a href="#自相关函数与白噪声" id="toc-自相关函数与白噪声" class="nav-link" data-scroll-target="#自相关函数与白噪声"><span class="header-section-number">2.3.2</span> 自相关函数与白噪声</a></li>
+  <li><a href="#用单个自相关系数作白噪声检验" id="toc-用单个自相关系数作白噪声检验" class="nav-link" data-scroll-target="#用单个自相关系数作白噪声检验"><span class="header-section-number">2.3.3</span> 用单个自相关系数作白噪声检验</a></li>
+  <li><a href="#ljung-box-白噪声检验" id="toc-ljung-box-白噪声检验" class="nav-link" data-scroll-target="#ljung-box-白噪声检验"><span class="header-section-number">2.3.4</span> Ljung-Box 白噪声检验</a></li>
   </ul></li>
   <li><a href="#线性时间序列" id="toc-线性时间序列" class="nav-link" data-scroll-target="#线性时间序列"><span class="header-section-number">2.4</span> 线性时间序列</a></li>
   <li><a href="#附录补充知识" id="toc-附录补充知识" class="nav-link" data-scroll-target="#附录补充知识"><span class="header-section-number">2.5</span> 附录：补充知识</a></li>
@@ -256,7 +265,7 @@ window.Quarto = {
 <section id="例子可口可乐公司盈利数据" class="level3" data-number="2.1.1">
 <h3 data-number="2.1.1" class="anchored" data-anchor-id="例子可口可乐公司盈利数据"><span class="header-section-number">2.1.1</span> 例子：可口可乐公司盈利数据</h3>
 <p>序列仍体现出缓慢的、非单调的上升趋势，又有明显的每年的周期变化（称为季节性）， 还有短期的波动：</p>
-<div id="c9b59849" class="cell" data-execution_count="1">
+<div id="37c9d842" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -292,7 +301,7 @@ window.Quarto = {
 </div>
 </div>
 <p>标出不同季节的数据点，可以看出，每年一般冬季和春季最低， 夏季最高，秋季介于夏季和冬季之间：</p>
-<div id="4c49a4d9" class="cell" data-execution_count="2">
+<div id="dae7e3f9" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -349,7 +358,7 @@ window.Quarto = {
 <section id="例子标普500指数月对数收益率" class="level3" data-number="2.1.2">
 <h3 data-number="2.1.2" class="anchored" data-anchor-id="例子标普500指数月对数收益率"><span class="header-section-number">2.1.2</span> 例子：标普500指数月对数收益率</h3>
 <p>收益率在0上下波动，除了个别时候基本在某个波动范围之内：</p>
-<div id="5654ca1a" class="cell" data-execution_count="3">
+<div id="ecc42b62" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -410,7 +419,7 @@ window.Quarto = {
 <h2 data-number="2.3" class="anchored" data-anchor-id="相关系数和自相关系数"><span class="header-section-number">2.3</span> 相关系数和自相关系数</h2>
 <section id="相关系数" class="level3" data-number="2.3.1">
 <h3 data-number="2.3.1" class="anchored" data-anchor-id="相关系数"><span class="header-section-number">2.3.1</span> 相关系数</h3>
-<div id="58b85de3" class="cell" data-execution_count="4">
+<div id="a3c75e70" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -456,7 +465,7 @@ window.Quarto = {
 <p><span class="math display">\[\tau=P\left[(X_1-X_2)(Y_1-Y_2)&gt;0\right]-P\left[(X_1-X_2)(Y_1-Y_2)&lt;0\right]\]</span></p>
 <p>即两个观测的分量次序一致的概率减去分量次序相反的概率。一致的概率越大，说明两个的正向相关性越 强。</p>
 <p>对 IBM 收益率与标普收益率数据计算这三种相关系数：</p>
-<div id="0759f6f6" class="cell" data-execution_count="5">
+<div id="aa32b823" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -504,8 +513,8 @@ Kendall correlation: 0.4328065703413303</code></pre>
 <p>若<span class="math inline">\(\{X_t\}\)</span>为有二阶矩的独立同分布随机变量列，则 <span class="math inline">\(\hat{\rho}_k(k&gt;0)\)</span>渐近服从N<span class="math inline">\((0,\frac1T)\)</span>。</p>
 <p>如果<span class="math inline">\(\{\varepsilon_t\}\)</span>是零均值独立同分布白噪声，<span class="math inline">\(q\)</span>为非负整数，<span class="math inline">\(\{\psi_j,j=0,1,\ldots,q\}\)</span>是数列，<span class="math inline">\(\psi_0=1\)</span>, <span class="math display">\[X_t=\mu+\sum_{j=0}^q\psi_j\varepsilon_{t-j},\:t\in\mathbb{Z},\]</span></p>
 <p>则从<span class="math inline">\(\{X_t,t=1,\ldots,T\}\)</span>计算的ACF满足：当<span class="math inline">\(k&gt;q\)</span>时，<span class="math inline">\(\sqrt T\hat{\rho}_k\)</span>渐近服从<span class="math inline">\(\mathbb{N}(0,1+2\sum_{j=0}^q\rho_j^2)\)</span>,这称为Bartlett公式。</p>
-<section id="例子crsp的第10分位组合的月对数收益率" class="level4" data-number="2.3.2.1">
-<h4 data-number="2.3.2.1" class="anchored" data-anchor-id="例子crsp的第10分位组合的月对数收益率"><span class="header-section-number">2.3.2.1</span> 例子：CRSP的第10分位组合的月对数收益率</h4>
+<section id="例子crsp-的第10分位组合的月度收益率" class="level4" data-number="2.3.2.1">
+<h4 data-number="2.3.2.1" class="anchored" data-anchor-id="例子crsp-的第10分位组合的月度收益率"><span class="header-section-number">2.3.2.1</span> 例子：CRSP 的第10分位组合的月度收益率</h4>
 <p>第10分位组合是NYSE、AMEX、NASDAQ市值最小的10%股票组成的投资组合， 每年都重新调整。</p>
 <ul>
 <li>CRSP是Center for Research in Security Prices, 位于Chicago Booth。</li>
@@ -513,7 +522,7 @@ Kendall correlation: 0.4328065703413303</code></pre>
 <li>AMEX(American Stock Exchange, 美国证券交易所，在纽约华尔街附近)，</li>
 <li>NASDAQ(National Association of Securities Dealers Automated Quotations，纳斯达克，位于纽约)。</li>
 </ul>
-<div id="6e9a3ac6" class="cell" data-execution_count="6">
+<div id="d3807971" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -549,7 +558,7 @@ Kendall correlation: 0.4328065703413303</code></pre>
 </div>
 </div>
 <p>绘制时间序列的自相关函数图（ACF）：</p>
-<div id="f2f93926" class="cell" data-execution_count="7">
+<div id="86ea7340" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -572,26 +581,232 @@ Kendall correlation: 0.4328065703413303</code></pre>
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf</span>
 <span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>))</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>plot_acf(data[<span class="st">"dec10"</span>])</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'ACF of CRSP Lower 10% Monthly Returns'</span>)</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plt.gca()  <span class="co"># 获取当前的轴对象</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>plot_acf(data[<span class="st">"dec10"</span>], ax<span class="op">=</span>ax, lags<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="op">-</span><span class="fl">0.25</span>, <span class="dv">1</span>)</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Lag'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)  <span class="co"># 设置横轴标签</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'ACF of CRSP Lower 10% Monthly Returns'</span>)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 768x384 with 0 Axes&gt;</code></pre>
-</div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="2-线性时间序列模型_files/figure-html/cell-8-output-2.png" width="590" height="431" class="figure-img"></p>
+<p><img src="2-线性时间序列模型_files/figure-html/cell-8-output-1.png" width="656" height="384" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>在 ACF 图像中，Lag 相当于 <span class="math inline">\(k\)</span>，ACF 相当于 <span class="math inline">\(\hat{\rho}_k\)</span>。</p>
+<p>ACF 图中横轴上下两条水平下是在独立同分布白噪声假设下的加减两倍标准差，即 <span class="math inline">\(\pm\frac2{\sqrt{T}}\)</span>。如果独立同分布白噪声假设成立，每个 <span class="math inline">\(\hat{\rho}_k\)</span> 有 95% 以上的概率落入这两条线之间。</p>
+<p>ACF 图 <span class="math inline">\(k=0\)</span> 处总对应 <span class="math inline">\(\hat{\rho}_0=1\)</span>。</p>
+<p>上图的 <span class="math inline">\(\hat{\rho}_1\)</span> 和 <span class="math inline">\(\hat{\rho}_{12}\)</span> 都超出了界限(因为是月度数目，横轴的单位是1/12为一个时间点)。从此图可以认为此投资组合的收益率不是白噪声。</p>
+</section>
+</section>
+<section id="用单个自相关系数作白噪声检验" class="level3" data-number="2.3.3">
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="用单个自相关系数作白噪声检验"><span class="header-section-number">2.3.3</span> 用单个自相关系数作白噪声检验</h3>
+<p>如果<span class="math inline">\(\{X_t\}\)</span>是独立同分布白噪声，则 <span class="math inline">\(\hat{\rho}_k(k\geq 1)\)</span> 近似 <span class="math inline">\(N(0,1/T)\)</span>。若 <span class="math inline">\(H_0\)</span> 是序列为白噪声，取统计量：</p>
+<p><span class="math display">\[t = \sqrt{T}\hat{\rho}_k\]</span></p>
+<p>如果<span class="math inline">\(|t|&gt;\)</span>qnorm<span class="math inline">\((1-\alpha/2)\)</span>，则拒绝白噪声零假设。实际中常取<span class="math inline">\(\alpha=0.05\)</span>, qnorm<span class="math inline">\((1-\alpha/2)\approx2\)</span>,当<span class="math inline">\(\hat{\rho}_1\)</span>超出<span class="math inline">\(\pm2/\sqrt T\)</span>则拒绝<span class="math inline">\(H_0\)</span>,有多个<span class="math inline">\(\hat{\rho}_k\)</span>超出<span class="math inline">\(\pm2/\sqrt T\)</span>也可拒绝<span class="math inline">\(H_0\)</span>,有一个<span class="math inline">\(t\)</span>统计量值很大(比如超出<span class="math inline">\(\pm3\)</span>)也可拒绝<span class="math inline">\(H_0\)</span>。</p>
+<p>在判断<span class="math inline">\(\{X_t\}\)</span>是否<span class="math inline">\(X_t=\mu+\sum_{j=0}^q\psi_j\varepsilon_{t-j}\)</span>这样的模型时，根据 Bartlet 公式，可取：</p>
+<p><span class="math display">\[t=\frac{\hat{\rho}_k}{\sqrt{\frac{1}{T}\left(1+2\sum_{j=1}^{k-1}\hat{\rho}_j^2\right)}},\:k&gt;q\]</span></p>
+<p>当<span class="math inline">\(t\)</span>超出 qnorm<span class="math inline">\((1-\alpha/2)\)</span>时拒绝这样的模型。</p>
+<section id="todo例子-3.3" class="level4" data-number="2.3.3.1">
+<h4 data-number="2.3.3.1" class="anchored" data-anchor-id="todo例子-3.3"><span class="header-section-number">2.3.3.1</span> TODO：例子 3.3</h4>
+</section>
+</section>
+<section id="ljung-box-白噪声检验" class="level3" data-number="2.3.4">
+<h3 data-number="2.3.4" class="anchored" data-anchor-id="ljung-box-白噪声检验"><span class="header-section-number">2.3.4</span> Ljung-Box 白噪声检验</h3>
+<p>为了检验时间序列样本是否来自白噪声序列，可以检验 <span class="math inline">\(\rho_k = 0, k = 1, 2, \cdots\)</span> 的零假设。前面检验单个 <span class="math inline">\(\rho_k\)</span> 的做法如果正对多个进行检验就有多重检验的第一类错误增大的问题。</p>
+<p>Box 和 Pierce(G. Box &amp; Pierce, 1970) 提出了混成统计量 (Portmanteau statistic)： <span class="math display">\[Q_*(m)=T\sum_{j=1}^m\hat{\rho}_j^2\]</span></p>
+<p>用来检验：</p>
+<p><span class="math display">\[H_0:\rho_1=\cdots=\rho_m=0\longleftrightarrow H_a: \text{不全为零}\]</span></p>
+<p>在<span class="math inline">\(\{X_t\}\)</span>是独立白噪声序列条件下，<span class="math inline">\(Q_*(m)\)</span>近似服从<span class="math inline">\(\chi^2(m)\)</span>分布。给定检验水平<span class="math inline">\(\alpha\)</span>,当<span class="math inline">\(Q_*(m)&gt;\)</span>qchisq<span class="math inline">\((1-\alpha,m)\)</span> 时拒绝<span class="math inline">\(H_{0}\)</span>,否定白噪声假设。如果检验的序列是线性时间序列估计的残差序列，则卡方自由度应改为<span class="math inline">\(m\)</span>减去估计的系数个数。</p>
+<p>Ljung 和 Box(Ljung &amp; Box, 1978) 对此检验方法进行了改进。统计量改为：</p>
+<p><span class="math display">\[Q(m)=T(T+2)\sum_{j=1}^m\frac{\hat{\rho}_j^2}{T-j}\]</span></p>
+<p>在独立同分布白噪声假设下仍近似服从<span class="math inline">\(\chi^2(m)\)</span>分布。当<span class="math inline">\(Q( m) &gt;\)</span>qchisq<span class="math inline">\(( 1- \alpha , m)\)</span>时拒绝<span class="math inline">\(H_0\)</span>,否定白噪声假设。这个检验称为 Ljung-Box 白噪声检验。如果检验的序列是线性时间序列估计的残差序列，则卡方自由度应改为<span class="math inline">\(m\)</span>减去估计的系数个数。比如，对 ARMA<span class="math inline">\((p,q)\)</span>模型建模的残差作白噪声检验，卡方自由度应改为<span class="math inline">\(m-(p+q)\)</span>。</p>
+<section id="例子检验-ibm-股票月收益率是否为白噪声" class="level4" data-number="2.3.4.1">
+<h4 data-number="2.3.4.1" class="anchored" data-anchor-id="例子检验-ibm-股票月收益率是否为白噪声"><span class="header-section-number">2.3.4.1</span> 例子：检验 IBM 股票月收益率是否为白噪声</h4>
+<p>绘制数据的 ACF 图像：</p>
+<div id="c6496b80" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> []</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../ftsdata/m-ibmsp-2611.txt"</span>, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> line <span class="kw">in</span> <span class="bu">file</span>.readlines():</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> line.strip(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>).strip(<span class="st">" "</span>).replace(<span class="st">"</span><span class="ch">\t</span><span class="st">"</span>, <span class="st">" "</span>).split(<span class="st">" "</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> <span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> x: x <span class="op">!=</span> <span class="st">""</span>, line))</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        raw_data.append(line)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame(raw_data[<span class="dv">1</span>:], columns<span class="op">=</span>raw_data[<span class="dv">0</span>])</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"date"</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">"date"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"%Y%m</span><span class="sc">%d</span><span class="st">"</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>data.set_index(<span class="st">"date"</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.<span class="bu">apply</span>(pd.to_numeric)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>data.head()</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>))</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plt.gca()  <span class="co"># 获取当前的轴对象</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>plot_acf(data[<span class="st">"ibm"</span>], ax<span class="op">=</span>ax, lags<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="op">-</span><span class="fl">0.25</span>, <span class="fl">0.25</span>)</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Lag'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)  <span class="co"># 设置横轴标签</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'ACF of IBM Stock Monthly Returns'</span>)</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2-线性时间序列模型_files/figure-html/cell-9-output-1.png" width="656" height="384" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>从 ACF 图来看，月度收益率是白噪声。</p>
+<p>作 Ljung-Box 白噪声检验，分别取 <span class="math inline">\(m = 12\)</span> 和 <span class="math inline">\(m = 24\)</span>：</p>
+<div id="b74afd0c" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> []</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../ftsdata/m-ibmsp-2611.txt"</span>, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> line <span class="kw">in</span> <span class="bu">file</span>.readlines():</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> line.strip(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>).strip(<span class="st">" "</span>).replace(<span class="st">"</span><span class="ch">\t</span><span class="st">"</span>, <span class="st">" "</span>).split(<span class="st">" "</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> <span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> x: x <span class="op">!=</span> <span class="st">""</span>, line))</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        raw_data.append(line)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame(raw_data[<span class="dv">1</span>:], columns<span class="op">=</span>raw_data[<span class="dv">0</span>])</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"date"</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">"date"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"%Y%m</span><span class="sc">%d</span><span class="st">"</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>data.set_index(<span class="st">"date"</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.<span class="bu">apply</span>(pd.to_numeric)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>data.head()</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.stats.diagnostic <span class="im">import</span> acorr_ljungbox</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 执行 Ljung-Box 白噪声检验</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>lb_test_12 <span class="op">=</span> acorr_ljungbox(data[<span class="st">"ibm"</span>], lags<span class="op">=</span>[<span class="dv">12</span>], return_df<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lb_test_12)</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>lb_test_24 <span class="op">=</span> acorr_ljungbox(data[<span class="st">"ibm"</span>], lags<span class="op">=</span>[<span class="dv">24</span>], return_df<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lb_test_24)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>      lb_stat  lb_pvalue
+12  13.097984   0.361959
+      lb_stat  lb_pvalue
+24  35.384127   0.062905</code></pre>
+</div>
+</div>
+<p>可以看出，在 0.05 水平下均不拒绝零假设，支持 IBM 月度简单收益率是白噪声的零假设。</p>
+<p>从简单收益率计算对数收益率，并进行 LB 白噪声检验：</p>
+<div id="3e4ceda4" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> []</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../ftsdata/m-ibmsp-2611.txt"</span>, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> line <span class="kw">in</span> <span class="bu">file</span>.readlines():</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> line.strip(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>).strip(<span class="st">" "</span>).replace(<span class="st">"</span><span class="ch">\t</span><span class="st">"</span>, <span class="st">" "</span>).split(<span class="st">" "</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> <span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> x: x <span class="op">!=</span> <span class="st">""</span>, line))</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        raw_data.append(line)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame(raw_data[<span class="dv">1</span>:], columns<span class="op">=</span>raw_data[<span class="dv">0</span>])</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"date"</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">"date"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"%Y%m</span><span class="sc">%d</span><span class="st">"</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>data.set_index(<span class="st">"date"</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.<span class="bu">apply</span>(pd.to_numeric)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>data.head()</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 执行 Ljung-Box 白噪声检验</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>lb_test_12 <span class="op">=</span> acorr_ljungbox(np.log(data[<span class="st">"ibm"</span>] <span class="op">+</span> <span class="dv">1</span>), lags<span class="op">=</span>[<span class="dv">12</span>], return_df<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lb_test_12)</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>lb_test_24 <span class="op">=</span> acorr_ljungbox(np.log(data[<span class="st">"ibm"</span>] <span class="op">+</span> <span class="dv">1</span>), lags<span class="op">=</span>[<span class="dv">24</span>], return_df<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lb_test_24)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>      lb_stat  lb_pvalue
+12  12.814366   0.382677
+      lb_stat  lb_pvalue
+24  34.505798   0.076073</code></pre>
+</div>
+</div>
+<p>可以看出，在 0.05 水平下不拒绝零假设。</p>
+</section>
+<section id="例子检验-crsp-的第10分位组合的月度收益率是否为白噪声" class="level4" data-number="2.3.4.2">
+<h4 data-number="2.3.4.2" class="anchored" data-anchor-id="例子检验-crsp-的第10分位组合的月度收益率是否为白噪声"><span class="header-section-number">2.3.4.2</span> 例子：检验 CRSP 的第10分位组合的月度收益率是否为白噪声</h4>
+<p>这是 [例子：CRSP 的第10分位组合的月对数收益率] 的继续，对其数据作白噪声检验。</p>
+<div id="2f6d5fae" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> []</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../ftsdata/m-dec12910.txt"</span>, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> line <span class="kw">in</span> <span class="bu">file</span>.readlines():</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> line.strip(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>).strip(<span class="st">" "</span>).replace(<span class="st">"</span><span class="ch">\t</span><span class="st">"</span>, <span class="st">" "</span>).split(<span class="st">" "</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> <span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> x: x <span class="op">!=</span> <span class="st">""</span>, line))</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>        raw_data.append(line)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame(raw_data[<span class="dv">1</span>:], columns<span class="op">=</span>raw_data[<span class="dv">0</span>])</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"date"</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">"date"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"%Y%m</span><span class="sc">%d</span><span class="st">"</span>)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>data.set_index(<span class="st">"date"</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.<span class="bu">apply</span>(pd.to_numeric)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>data.head()</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.stats.diagnostic <span class="im">import</span> acorr_ljungbox</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 执行 Ljung-Box 白噪声检验</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>lb_test_12 <span class="op">=</span> acorr_ljungbox(data[<span class="st">"dec10"</span>], lags<span class="op">=</span>[<span class="dv">12</span>], return_df<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lb_test_12)</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>lb_test_24 <span class="op">=</span> acorr_ljungbox(data[<span class="st">"dec10"</span>], lags<span class="op">=</span>[<span class="dv">24</span>], return_df<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lb_test_24)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>      lb_stat  lb_pvalue
+12  41.059699   0.000048
+      lb_stat  lb_pvalue
+24  56.245617   0.000212</code></pre>
+</div>
+</div>
+<p>可以看出，在 0.05 水平下拒绝零假设，认为 CRSP 第10分位组合的月度简单收益率不是白噪声。</p>
+<p>有效市场假设认为收益率是不可预测的，也就不会有非零的自相关。但是，股价的决定方式和指数收盗率的计算方式等可能会导致在观测到的收益率序列中有自相关性。高频金融数据中很常见自相关性。</p>
+<p>常见的白噪声检验还有 TREVOR S. BREUSCH (1978) 和 LESLIE G. GODFREY (1978) 提出的拉格朗日乘子法检验(LM 检验)。零假设为白噪声，对立假设为 AR、MA 或者 ARMA。</p>
 </section>
 </section>
 </section>
 <section id="线性时间序列" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="线性时间序列"><span class="header-section-number">2.4</span> 线性时间序列</h2>
+<p>设<span class="math inline">\(\{X_t\}\)</span>是独立同分布的二阶矩有限的随机变量，称<span class="math inline">\(\{X_t\}\)</span>为<strong>独立同分布白噪声</strong> (white noise)。最常用的白噪声一般假设均值为零。如果<span class="math inline">\(\{X_t\}\)</span>独立同 N<span class="math inline">\((0,\sigma^2)\)</span>分布，称<span class="math inline">\(\{X_t\}\)</span>为高斯(Gaussian) 白噪声或正态白噪声。</p>
+<p>白噪声序列的自相关函数为零(<span class="math inline">\(\rho_0=1\)</span>除外)。</p>
+<p>实际应用中如果样本自相关函数近似为零(ACF 图中都位于控制线之内或基本不超出控制线),则可认为该序列是白 噪声的样本。</p>
+<p>设<span class="math inline">\(\{\varepsilon_t\}\)</span>是零均值独立同分布白噪声，<span class="math inline">\(\operatorname{Var}(\varepsilon_t)=\sigma^2\)</span>,数列<span class="math inline">\(\{\psi_j\}\)</span>满足<span class="math inline">\(\sum_j\psi_j^2&lt;\infty,\psi_0=1\)</span>,令：</p>
+<p><span class="math display">\[X_t=\mu+\sum_{j=0}^\infty\psi_j\varepsilon_{t-j},t\in\mathbb{Z}\]</span></p>
+<p>则称<span class="math inline">\(\left\{X_t\right\}\)</span>是(因果)线性时间序列，<span class="math inline">\(\varepsilon_t\)</span>代表了在时刻<span class="math inline">\(t\)</span>增加的变动信息，称为<strong>新息</strong>(innovation)或者扰动 (shock)。因果线性时间序列满足新息<span class="math inline">\(\varepsilon_{t+j}(j\geq1)\)</span>与历史的<span class="math inline">\(X_t,X_{t-1}\)</span>独立。而且，<span class="math inline">\(\{X_t-1,X_{t-2},...\}\)</span>与<span class="math inline">\(\{\varepsilon_t-1,\varepsilon_{t-2},...\}\)</span>可以互相线性地表示。</p>
+<p>这个定义可以放宽到<span class="math inline">\(\left\{\varepsilon_t\right\}\)</span>是宽平稳的不相关列(宽白噪声)的情形。这时，称(3.1)为<span class="math inline">\(\left\{X_t\right\}\)</span>的 <strong>Wold 分解</strong>，称<span class="math inline">\(\left\{X_t\right\}\)</span> 为<strong>纯非决定性序列</strong>。</p>
+<p>许多弱平稳时间序列是线性时间序列，后面讲到的 AR 模型、MA 模型、ARMA 模型都属于线性时间序列。另外的 许多弱平稳时间序列可以被线性时间序列近似。非平稳的时间序列不是线性时间序列。</p>
+<p><span class="math inline">\(\{\psi_j\}\)</span>称为模型的<span class="math inline">\(\psi\)</span>权重。易见：</p>
+<p><span class="math display">\[EX_t=\mu,\quad\mathrm{Var}(X_t)=\sigma^2\sum_{j=0}^\infty\psi_j^2,\]</span></p>
+<p>自协方差函数为：</p>
+<p><span class="math display">\[\begin{aligned}\gamma_{k}=&amp;\mathrm{Cov}(X_{t},X_{t-k})=E\left[\left(\sum_{i=0}^{\infty}\psi_{i}\varepsilon_{t-i}\right)\left(\sum_{i=0}^{\infty}\psi_{i}\varepsilon_{t-i-l}\right)\right]\\=&amp;E\left(\sum_{i,j=0}^{\infty}\psi_{i}\psi_{j}\varepsilon_{t-i}\varepsilon_{t-j-k}\right)=\sigma^{2}\sum_{i,j=0}^{\infty}\psi_{i}\psi_{j}\delta_{i-j-k}\\=&amp;\sigma^{2}\sum_{j=0}^{\infty}\psi_{j}\psi_{j+k}\end{aligned}\]</span></p>
+<p>其中<span class="math inline">\(\delta_k\)</span>当<span class="math inline">\(k=0\)</span>时为 1,当<span class="math inline">\(k\neq0\)</span>时为0。</p>
+<p>自相关函数为：</p>
+<p><span class="math display">\[\rho_k=\dfrac{\gamma_k}{\gamma_0}=\dfrac{\sum_{j=0}^\infty\psi_j\psi_{j+k}}{1+\sum_{j=1}^\infty\psi_j^2},\:k\ge0\]</span></p>
+<p>线性时间序列模型满足<span class="math inline">\(\psi_j\to0,j\to\infty\)</span>,所以历史上的扰动的影响会逐渐消失。另外<span class="math inline">\(\rho_k\to0,k\to\infty\)</span>,所以相距较远的观测之间的相关性很小。</p>
+<p>不是所有的弱平稳时间序列都有这样的性质。非平稳序列更是不需要满足这些性质。</p>
 </section>
 <section id="附录补充知识" class="level2" data-number="2.5">
 <h2 data-number="2.5" class="anchored" data-anchor-id="附录补充知识"><span class="header-section-number">2.5</span> 附录：补充知识</h2>
@@ -1171,6 +1386,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../Ch3/3-自回归模型.html" class="pagination-link" aria-label="自回归模型">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">自回归模型</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
