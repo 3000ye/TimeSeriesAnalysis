@@ -141,7 +141,7 @@ $$X_t=\mu+\sum_{j=0}^q\psi_j\varepsilon_{t-j},\:t\in\mathbb{Z},$$
 
 则从$\{X_t,t=1,\ldots,T\}$计算的ACF满足：当$k>q$时，$\sqrt T\hat{\rho}_k$渐近服从$\mathbb{N}(0,1+2\sum_{j=0}^q\rho_j^2)$,这称为Bartlett公式。
 
-#### 例子：CRSP的第10分位组合的月对数收益率
+#### 例子：CRSP 的第10分位组合的月度收益率
 
 第10分位组合是NYSE、AMEX、NASDAQ市值最小的10%股票组成的投资组合， 每年都重新调整。
 
@@ -162,7 +162,130 @@ $$X_t=\mu+\sum_{j=0}^q\psi_j\varepsilon_{t-j},\:t\in\mathbb{Z},$$
 {{< include _sample_d10_3.py >}}
 ```
 
+在 ACF 图像中，Lag 相当于 $k$，ACF 相当于 $\hat{\rho}_k$。
+
+ACF 图中横轴上下两条水平下是在独立同分布白噪声假设下的加减两倍标准差，即 $\pm\frac2{\sqrt{T}}$。如果独立同分布白噪声假设成立，每个 $\hat{\rho}_k$ 有 95% 以上的概率落入这两条线之间。
+
+ACF 图 $k=0$ 处总对应 $\hat{\rho}_0=1$。
+
+上图的 $\hat{\rho}_1$ 和 $\hat{\rho}_{12}$ 都超出了界限(因为是月度数目，横轴的单位是1/12为一个时间点)。从此图可以认为此投资组合的收益率不是白噪声。
+
+### 用单个自相关系数作白噪声检验
+
+如果$\{X_t\}$是独立同分布白噪声，则 $\hat{\rho}_k(k\geq 1)$ 近似 $N(0,1/T)$。若 $H_0$ 是序列为白噪声，取统计量：
+
+$$t = \sqrt{T}\hat{\rho}_k$$
+
+如果$|t|>$qnorm$(1-\alpha/2)$，则拒绝白噪声零假设。实际中常取$\alpha=0.05$, qnorm$(1-\alpha/2)\approx2$,当$\hat{\rho}_1$超出$\pm2/\sqrt T$则拒绝$H_0$,有多个$\hat{\rho}_k$超出$\pm2/\sqrt T$也可拒绝$H_0$,有一个$t$统计量值很大(比如超出$\pm3$)也可拒绝$H_0$。
+
+在判断$\{X_t\}$是否$X_t=\mu+\sum_{j=0}^q\psi_j\varepsilon_{t-j}$这样的模型时，根据 Bartlet 公式，可取：
+
+$$t=\frac{\hat{\rho}_k}{\sqrt{\frac{1}{T}\left(1+2\sum_{j=1}^{k-1}\hat{\rho}_j^2\right)}},\:k>q$$
+
+当$t$超出 qnorm$(1-\alpha/2)$时拒绝这样的模型。
+
+#### TODO：例子 3.3
+
+### Ljung-Box 白噪声检验
+
+为了检验时间序列样本是否来自白噪声序列，可以检验 $\rho_k = 0, k = 1, 2, \cdots$ 的零假设。前面检验单个 $\rho_k$ 的做法如果正对多个进行检验就有多重检验的第一类错误增大的问题。
+
+Box 和 Pierce(G. Box & Pierce, 1970) 提出了混成统计量 (Portmanteau statistic)：
+$$Q_*(m)=T\sum_{j=1}^m\hat{\rho}_j^2$$
+
+用来检验：
+
+$$H_0:\rho_1=\cdots=\rho_m=0\longleftrightarrow H_a: \text{不全为零}$$
+
+在$\{X_t\}$是独立白噪声序列条件下，$Q_*(m)$近似服从$\chi^2(m)$分布。给定检验水平$\alpha$,当$Q_*(m)>$qchisq$(1-\alpha,m)$ 时拒绝$H_{0}$,否定白噪声假设。如果检验的序列是线性时间序列估计的残差序列，则卡方自由度应改为$m$减去估计的系数个数。
+
+Ljung 和 Box(Ljung & Box, 1978) 对此检验方法进行了改进。统计量改为：
+
+$$Q(m)=T(T+2)\sum_{j=1}^m\frac{\hat{\rho}_j^2}{T-j}$$
+
+在独立同分布白噪声假设下仍近似服从$\chi^2(m)$分布。当$Q( m) >$qchisq$( 1- \alpha , m)$时拒绝$H_0$,否定白噪声假设。这个检验称为 Ljung-Box 白噪声检验。如果检验的序列是线性时间序列估计的残差序列，则卡方自由度应改为$m$减去估计的系数个数。比如，对 ARMA$(p,q)$模型建模的残差作白噪声检验，卡方自由度应改为$m-(p+q)$。
+
+#### 例子：检验 IBM 股票月收益率是否为白噪声
+
+绘制数据的 ACF 图像：
+
+```{python}
+{{< include _sample_ibm_1.py >}}
+{{< include _sample_ibm_2.py >}}
+```
+
+从 ACF 图来看，月度收益率是白噪声。
+
+作 Ljung-Box 白噪声检验，分别取 $m = 12$ 和 $m = 24$：
+
+```{python}
+{{< include _sample_ibm_1.py >}}
+{{< include _sample_ibm_3.py >}}
+```
+
+可以看出，在 0.05 水平下均不拒绝零假设，支持 IBM 月度简单收益率是白噪声的零假设。
+
+从简单收益率计算对数收益率，并进行 LB 白噪声检验：
+
+```{python}
+{{< include _sample_ibm_1.py >}}
+{{< include _sample_ibm_4.py >}}
+```
+
+可以看出，在 0.05 水平下不拒绝零假设。
+
+#### 例子：检验 CRSP 的第10分位组合的月度收益率是否为白噪声
+
+这是 [例子：CRSP 的第10分位组合的月对数收益率] 的继续，对其数据作白噪声检验。
+
+```{python}
+{{< include _sample_d10_1.py >}}
+{{< include _sample_d10_4.py >}}
+```
+
+可以看出，在 0.05 水平下拒绝零假设，认为 CRSP 第10分位组合的月度简单收益率不是白噪声。
+
+有效市场假设认为收益率是不可预测的，也就不会有非零的自相关。但是，股价的决定方式和指数收盗率的计算方式等可能会导致在观测到的收益率序列中有自相关性。高频金融数据中很常见自相关性。
+
+常见的白噪声检验还有 TREVOR S. BREUSCH (1978) 和 LESLIE G. GODFREY (1978) 提出的拉格朗日乘子法检验(LM 检验)。零假设为白噪声，对立假设为 AR、MA 或者 ARMA。
+
 ## 线性时间序列
 
+设$\{X_t\}$是独立同分布的二阶矩有限的随机变量，称$\{X_t\}$为**独立同分布白噪声** (white noise)。最常用的白噪声一般假设均值为零。如果$\{X_t\}$独立同 N$(0,\sigma^2)$分布，称$\{X_t\}$为高斯(Gaussian) 白噪声或正态白噪声。
+
+白噪声序列的自相关函数为零($\rho_0=1$除外)。
+
+实际应用中如果样本自相关函数近似为零(ACF 图中都位于控制线之内或基本不超出控制线),则可认为该序列是白
+噪声的样本。
+
+设$\{\varepsilon_t\}$是零均值独立同分布白噪声，$\operatorname{Var}(\varepsilon_t)=\sigma^2$,数列$\{\psi_j\}$满足$\sum_j\psi_j^2<\infty,\psi_0=1$,令：
+
+$$X_t=\mu+\sum_{j=0}^\infty\psi_j\varepsilon_{t-j},t\in\mathbb{Z}$$
+
+则称$\left\{X_t\right\}$是(因果)线性时间序列，$\varepsilon_t$代表了在时刻$t$增加的变动信息，称为**新息**(innovation)或者扰动 (shock)。因果线性时间序列满足新息$\varepsilon_{t+j}(j\geq1)$与历史的$X_t,X_{t-1}$独立。而且，$\{X_t-1,X_{t-2},...\}$与$\{\varepsilon_t-1,\varepsilon_{t-2},...\}$可以互相线性地表示。
+
+这个定义可以放宽到$\left\{\varepsilon_t\right\}$是宽平稳的不相关列(宽白噪声)的情形。这时，称(3.1)为$\left\{X_t\right\}$的 **Wold 分解**，称$\left\{X_t\right\}$
+为**纯非决定性序列**。
+
+许多弱平稳时间序列是线性时间序列，后面讲到的 AR 模型、MA 模型、ARMA 模型都属于线性时间序列。另外的
+许多弱平稳时间序列可以被线性时间序列近似。非平稳的时间序列不是线性时间序列。
+
+$\{\psi_j\}$称为模型的$\psi$权重。易见：
+
+$$EX_t=\mu,\quad\mathrm{Var}(X_t)=\sigma^2\sum_{j=0}^\infty\psi_j^2,$$
+
+自协方差函数为：
+
+$$\begin{aligned}\gamma_{k}=&\mathrm{Cov}(X_{t},X_{t-k})=E\left[\left(\sum_{i=0}^{\infty}\psi_{i}\varepsilon_{t-i}\right)\left(\sum_{i=0}^{\infty}\psi_{i}\varepsilon_{t-i-l}\right)\right]\\=&E\left(\sum_{i,j=0}^{\infty}\psi_{i}\psi_{j}\varepsilon_{t-i}\varepsilon_{t-j-k}\right)=\sigma^{2}\sum_{i,j=0}^{\infty}\psi_{i}\psi_{j}\delta_{i-j-k}\\=&\sigma^{2}\sum_{j=0}^{\infty}\psi_{j}\psi_{j+k}\end{aligned}$$
+
+其中$\delta_k$当$k=0$时为 1,当$k\neq0$时为0。
+
+自相关函数为：
+
+$$\rho_k=\dfrac{\gamma_k}{\gamma_0}=\dfrac{\sum_{j=0}^\infty\psi_j\psi_{j+k}}{1+\sum_{j=1}^\infty\psi_j^2},\:k\ge0$$
+
+线性时间序列模型满足$\psi_j\to0,j\to\infty$,所以历史上的扰动的影响会逐渐消失。另外$\rho_k\to0,k\to\infty$,所以相距较远的观测之间的相关性很小。
+
+不是所有的弱平稳时间序列都有这样的性质。非平稳序列更是不需要满足这些性质。
 
 ## 附录：补充知识

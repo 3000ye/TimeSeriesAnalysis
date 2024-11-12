@@ -9,6 +9,7 @@ book:
     - index.qmd
     - Ch1/1-金融数据及其特征.qmd
     - Ch2/2-线性时间序列模型.qmd
+    - Ch3/3-自回归模型.qmd
 
 format:
   html:

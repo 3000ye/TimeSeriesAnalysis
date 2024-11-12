@@ -1,0 +1,6 @@
+plt.figure(figsize=(8, 4))
+plt.plot(data["vwrtn"], label='Value Weighted Return', color="green")
+plt.title('CRSP Value Weighted Index Monthly Return')
+plt.ylabel('Value Weighted')
+plt.legend()
+plt.show()
