@@ -20,7 +20,7 @@ format:
     code-fold: true
   pdf:
     documentclass: book
-    mainfont: "SimHei"
+    mainfont: SimHei
 
 resources:
   - CNAME
