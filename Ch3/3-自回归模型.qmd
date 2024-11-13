@@ -202,6 +202,6 @@ $$\hat{\sigma}^2=\frac{1}{T-2p-1}\sum\limits_{t=p+1}^Te_t^2$$
 
 $$\tilde{\sigma}^2=\frac{1}{T-p}\sum_{t=p+1}^Te_t^2=\frac{T-2p-1}{T-p}\sum_{t=p+1}^Te_t^2$$
 
-## TODO：AR 模型拟合优度指标
+## TODO: AR 模型拟合优度指标
 
-## TODO：用估计的 AR 模型进行预测
+## TODO: 用估计的 AR 模型进行预测

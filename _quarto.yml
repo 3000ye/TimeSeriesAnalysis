@@ -10,6 +10,7 @@ book:
     - Ch1/1-金融数据及其特征.qmd
     - Ch2/2-线性时间序列模型.qmd
     - Ch3/3-自回归模型.qmd
+    - Ch4/4-移动平均模型.qmd
 
 format:
   html:
@@ -18,7 +19,8 @@ format:
       dark: slate
     code-fold: true
   pdf:
-    documentclass: scrreprt
+    documentclass: book
+    mainfont: "SimHei"
 
 resources:
   - CNAME
