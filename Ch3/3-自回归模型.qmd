@@ -158,5 +158,50 @@ ACF 图明显不截尾，绘制 PACF 图：
 {{< include _sample_gnp_3.py >}}
 ```
 
-PACF 虽然在 𝑘 = 3, 9, 14, 16 等位置超出界限，但是超出不多，可考虑用 AR(3) 建模。
+PACF 虽然在 $k = 3, 9, 14, 16$ 等位置超出界限，但是超出不多，可考虑用 AR(3) 建模。
 
+## 信息准则
+
+信息准则是统计建模中常用的模型比较工具，其基本思想是模型拟合数据的拟合优度与模型简单化的折衷。
+AIC 准则(Akaike's Information Criterion):
+
+$$\mathrm{AIC}=-\frac{2}{T}\ln(\text{似然函数值})+\frac{2}{T}(\text{参数个数})$$
+
+其中似然函数值是在参数最大似然估计处的似然函数值。当模型为高斯AR( p) ,即$\{\epsilon_t\}$是独立同 N$(0,\sigma^2)$序列时的AR$(p)$模型时，AIC 公式为：
+
+$$\mathrm{AIC}(k)=\ln\tilde{\sigma}_k^2+\frac{2k}{T}$$
+
+其中$k$是模型的阶，$\tilde{\sigma}_k^2$是阶为$k$的条件下$\varepsilon_t$的方差的最大似然估计。$\ln\tilde{\sigma}_k^2$代表了模型对数据的拟合优劣，此值越大拟合越差；$\frac{2k}{r}$是对模型复杂程度的惩罚，此值越大，模型越复杂，稳定性越差，对未来的情况的适应性也越差。在某个范围内取$k$使得 AIC$(k)$最小，就达成了拟合优度与模型简单程度的折衷。
+
+另一个常用的信息准则是 BIC 准则 (Bayesian Information Criterion),高斯 AR 模型为：
+
+$$\mathrm{BIC}(k)=\ln\tilde{\sigma}_k^2+\frac{k\ln T}{T}$$
+
+BIC 倾向于取比 AIC 更低阶的模型。
+
+可以取 $k = 0, 1, \cdots, P_0$ 计算 AIC 或 BIC，去最小值点的 $k$。$P_0$ 可以取为 $10 \log_{10} T$。
+
+## AR 模型的参数估计方法
+
+AR 模型有多种估计方法，比如，用普通线性回归的最小二乘法估计，假设正态分布用最大似然估计，Yule-Walken
+递推计算，Burg 递推计算，等等。
+
+设$\phi_i$的估计为$\hat{\phi}_i$,则拟合值为：
+
+$$\hat{x}_t=\hat{\phi}_0+\hat{\phi}_1x_{t-1}+\cdots+\hat{\phi}_px_{t-p},\:t=p+1,...,T$$
+
+残差为：
+
+$$e_t=x_t-\hat{x}_t,\:t=p+1,...,T$$
+
+相应的新息方差$\sigma^2=$Var$(\varepsilon_t)$的估计为：
+
+$$\hat{\sigma}^2=\frac{1}{T-2p-1}\sum\limits_{t=p+1}^Te_t^2$$
+
+如果使用高斯条件最大似然估计(认为$x_1,...,x_p$固定),则$\hat{\phi}_i$估计不变，但是新息方差得估计变成了：
+
+$$\tilde{\sigma}^2=\frac{1}{T-p}\sum_{t=p+1}^Te_t^2=\frac{T-2p-1}{T-p}\sum_{t=p+1}^Te_t^2$$
+
+## TODO：AR 模型拟合优度指标
+
+## TODO：用估计的 AR 模型进行预测
