@@ -64,6 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../Ch4/4-移动平均模型.html" rel="next">
 <link href="../Ch2/2-线性时间序列模型.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -197,6 +198,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">自回归模型</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Ch4/4-移动平均模型.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">移动平均模型</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -216,8 +223,8 @@ window.Quarto = {
   <li><a href="#偏自相关函数" id="toc-偏自相关函数" class="nav-link" data-scroll-target="#偏自相关函数"><span class="header-section-number">3.7</span> 偏自相关函数</a></li>
   <li><a href="#信息准则" id="toc-信息准则" class="nav-link" data-scroll-target="#信息准则"><span class="header-section-number">3.8</span> 信息准则</a></li>
   <li><a href="#ar-模型的参数估计方法" id="toc-ar-模型的参数估计方法" class="nav-link" data-scroll-target="#ar-模型的参数估计方法"><span class="header-section-number">3.9</span> AR 模型的参数估计方法</a></li>
-  <li><a href="#todoar-模型拟合优度指标" id="toc-todoar-模型拟合优度指标" class="nav-link" data-scroll-target="#todoar-模型拟合优度指标"><span class="header-section-number">3.10</span> TODO：AR 模型拟合优度指标</a></li>
-  <li><a href="#todo用估计的-ar-模型进行预测" id="toc-todo用估计的-ar-模型进行预测" class="nav-link" data-scroll-target="#todo用估计的-ar-模型进行预测"><span class="header-section-number">3.11</span> TODO：用估计的 AR 模型进行预测</a></li>
+  <li><a href="#todo-ar-模型拟合优度指标" id="toc-todo-ar-模型拟合优度指标" class="nav-link" data-scroll-target="#todo-ar-模型拟合优度指标"><span class="header-section-number">3.10</span> TODO: AR 模型拟合优度指标</a></li>
+  <li><a href="#todo-用估计的-ar-模型进行预测" id="toc-todo-用估计的-ar-模型进行预测" class="nav-link" data-scroll-target="#todo-用估计的-ar-模型进行预测"><span class="header-section-number">3.11</span> TODO: 用估计的 AR 模型进行预测</a></li>
   </ul>
 </nav>
     </div>
@@ -322,7 +329,7 @@ window.Quarto = {
 <section id="例子crsp-价值加权指数月度收益率" class="level4" data-number="3.7.0.1">
 <h4 data-number="3.7.0.1" class="anchored" data-anchor-id="例子crsp-价值加权指数月度收益率"><span class="header-section-number">3.7.0.1</span> 例子：CRSP 价值加权指数月度收益率</h4>
 <p>查看数据：</p>
-<div id="0d174a86" class="cell" data-execution_count="1">
+<div id="d76c5d88" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -358,7 +365,7 @@ window.Quarto = {
 </div>
 </div>
 <p>绘制 ACF 图像：</p>
-<div id="70838ee9" class="cell" data-execution_count="2">
+<div id="7f7dbe8e" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -397,7 +404,7 @@ window.Quarto = {
 </div>
 </div>
 <p>发现 ACF 到 <span class="math inline">\(k = 21\)</span> 还没有截尾，绘制 PACF 图：</p>
-<div id="159cbfad" class="cell" data-execution_count="3">
+<div id="d28d9144" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -441,7 +448,7 @@ window.Quarto = {
 <h4 data-number="3.7.0.2" class="anchored" data-anchor-id="例子美国的国民生产总值-gnp-经过季节调整后的季度增长率"><span class="header-section-number">3.7.0.2</span> 例子：美国的国民生产总值 (GNP) 经过季节调整后的季度增长率</h4>
 <p>这是 <a href="#todo-例子美国的国民生产总值-gnp-经过季节调整后的季度增长率">TODO: 例子：美国的国民生产总值 (GNP) 经过季节调整后的季度增长率</a> 的继续，判断美国 GNP 经过季节调整后的季度增长率的 <span class="math inline">\(p\)</span> 的取值。</p>
 <p>绘制 ACF 图：</p>
-<div id="e3d03dd4" class="cell" data-execution_count="4">
+<div id="4d4ea2c3" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -470,7 +477,7 @@ window.Quarto = {
 </div>
 </div>
 <p>ACF 图明显不截尾，绘制 PACF 图：</p>
-<div id="e9b3543a" class="cell" data-execution_count="5">
+<div id="1be55d04" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -525,11 +532,11 @@ window.Quarto = {
 <p>如果使用高斯条件最大似然估计(认为<span class="math inline">\(x_1,...,x_p\)</span>固定),则<span class="math inline">\(\hat{\phi}_i\)</span>估计不变，但是新息方差得估计变成了：</p>
 <p><span class="math display">\[\tilde{\sigma}^2=\frac{1}{T-p}\sum_{t=p+1}^Te_t^2=\frac{T-2p-1}{T-p}\sum_{t=p+1}^Te_t^2\]</span></p>
 </section>
-<section id="todoar-模型拟合优度指标" class="level2" data-number="3.10">
-<h2 data-number="3.10" class="anchored" data-anchor-id="todoar-模型拟合优度指标"><span class="header-section-number">3.10</span> TODO：AR 模型拟合优度指标</h2>
+<section id="todo-ar-模型拟合优度指标" class="level2" data-number="3.10">
+<h2 data-number="3.10" class="anchored" data-anchor-id="todo-ar-模型拟合优度指标"><span class="header-section-number">3.10</span> TODO: AR 模型拟合优度指标</h2>
 </section>
-<section id="todo用估计的-ar-模型进行预测" class="level2" data-number="3.11">
-<h2 data-number="3.11" class="anchored" data-anchor-id="todo用估计的-ar-模型进行预测"><span class="header-section-number">3.11</span> TODO：用估计的 AR 模型进行预测</h2>
+<section id="todo-用估计的-ar-模型进行预测" class="level2" data-number="3.11">
+<h2 data-number="3.11" class="anchored" data-anchor-id="todo-用估计的-ar-模型进行预测"><span class="header-section-number">3.11</span> TODO: 用估计的 AR 模型进行预测</h2>
 
 
 </section>
@@ -1106,6 +1113,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../Ch4/4-移动平均模型.html" class="pagination-link" aria-label="移动平均模型">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">移动平均模型</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

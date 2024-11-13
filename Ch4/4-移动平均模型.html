@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Castor">
-<meta name="dcterms.date" content="2024-11-04">
 
-<title>TimeSeriesAnalysis</title>
+<title>4&nbsp; 移动平均模型 – TimeSeriesAnalysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -25,25 +23,25 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./Ch1/1-金融数据及其特征.html" rel="next">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Ch3/3-自回归模型.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -84,7 +82,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Preface</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Ch4/4-移动平均模型.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">移动平均模型</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -99,7 +97,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">TimeSeriesAnalysis</a> 
+      <a href="../">TimeSeriesAnalysis</a> 
         <div class="sidebar-tools-main">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -114,31 +112,31 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Preface</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./Ch1/1-金融数据及其特征.html" class="sidebar-item-text sidebar-link">
+  <a href="../Ch1/1-金融数据及其特征.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">金融数据及其特征</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./Ch2/2-线性时间序列模型.html" class="sidebar-item-text sidebar-link">
+  <a href="../Ch2/2-线性时间序列模型.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">线性时间序列模型</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./Ch3/3-自回归模型.html" class="sidebar-item-text sidebar-link">
+  <a href="../Ch3/3-自回归模型.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">自回归模型</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./Ch4/4-移动平均模型.html" class="sidebar-item-text sidebar-link">
+  <a href="../Ch4/4-移动平均模型.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">移动平均模型</span></span></a>
   </div>
 </li>
@@ -152,11 +150,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#preface" id="toc-preface" class="nav-link active" data-scroll-target="#preface">Preface</a>
-  <ul class="collapse">
-  <li><a href="#关于本网页" id="toc-关于本网页" class="nav-link" data-scroll-target="#关于本网页">关于本网页</a></li>
-  <li><a href="#本书内容" id="toc-本书内容" class="nav-link" data-scroll-target="#本书内容">本书内容</a></li>
-  </ul></li>
+  <li><a href="#移动平均模型的概念" id="toc-移动平均模型的概念" class="nav-link active" data-scroll-target="#移动平均模型的概念"><span class="header-section-number">4.1</span> 移动平均模型的概念</a></li>
   </ul>
 </nav>
     </div>
@@ -165,26 +159,14 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">TimeSeriesAnalysis</h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">移动平均模型</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Castor </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">November 4, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -194,26 +176,10 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="preface" class="level1 unnumbered">
-<h1 class="unnumbered">Preface</h1>
-<section id="关于本网页" class="level2">
-<h2 class="anchored" data-anchor-id="关于本网页">关于本网页</h2>
-<p>本书为北京大学数学科学学院金融数学系金融数学应用硕士《金融时间序列分析》（李东风）的阅读笔记，原文示例代码使用 R 语言进行编写，本文实现了 Python 语言版本。</p>
-<p>原文链接：<a href="https://www.math.pku.edu.cn/teachers/lidf/course/fts/ftsnotes/html/_ftsnotes/rsoft.html">《金融时间序列分析》</a></p>
-</section>
-<section id="本书内容" class="level2">
-<h2 class="anchored" data-anchor-id="本书内容">本书内容</h2>
-<!-- -   R软件的时间序列相关的功能介绍, Rmd格式介绍; -->
-<ul>
-<li>收益率，债券，波动率，金融数据示例，收益率分布性质，金融数据可视化，统计分布复习;</li>
-<li>线性时间序列：款平稳，自相关系数函数，ACF的白噪声检验， AR, 偏相关系数，定阶与参数估计，预测，MA， ARMA, ARIMA，单位根过程，单位根检验， 指数平滑方法，季节模型， 回归模型的序列相关误差项，协整， 长记忆模型，模型比较与模型平均 线性时间序列的案例研究;</li>
-<li>资产波动率，ARCH效应，ARCH模型，GARCH模型，IGARCH模型， GARCH-M模型，EGARCH模型, TGARCH模型, APARCH模型， 非对称GARCH模型，随机波动率模型 波动率模型案例研究;</li>
-<li>多元时间序列的基础知识和VAR模型， 协整和协整检验，格兰杰因果性;</li>
-<li>状态空间模型介绍。</li>
-</ul>
+<section id="移动平均模型的概念" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="移动平均模型的概念"><span class="header-section-number">4.1</span> 移动平均模型的概念</h2>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -783,11 +749,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="../Ch3/3-自回归模型.html" class="pagination-link" aria-label="自回归模型">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">自回归模型</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./Ch1/1-金融数据及其特征.html" class="pagination-link" aria-label="金融数据及其特征">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">金融数据及其特征</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
