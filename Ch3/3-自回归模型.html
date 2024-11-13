@@ -214,6 +214,10 @@ window.Quarto = {
   <li><a href="#todo-ar2-模型的性质" id="toc-todo-ar2-模型的性质" class="nav-link" data-scroll-target="#todo-ar2-模型的性质"><span class="header-section-number">3.5</span> TODO: AR(2) 模型的性质</a></li>
   <li><a href="#arp-模型的性质" id="toc-arp-模型的性质" class="nav-link" data-scroll-target="#arp-模型的性质"><span class="header-section-number">3.6</span> AR(p) 模型的性质</a></li>
   <li><a href="#偏自相关函数" id="toc-偏自相关函数" class="nav-link" data-scroll-target="#偏自相关函数"><span class="header-section-number">3.7</span> 偏自相关函数</a></li>
+  <li><a href="#信息准则" id="toc-信息准则" class="nav-link" data-scroll-target="#信息准则"><span class="header-section-number">3.8</span> 信息准则</a></li>
+  <li><a href="#ar-模型的参数估计方法" id="toc-ar-模型的参数估计方法" class="nav-link" data-scroll-target="#ar-模型的参数估计方法"><span class="header-section-number">3.9</span> AR 模型的参数估计方法</a></li>
+  <li><a href="#todoar-模型拟合优度指标" id="toc-todoar-模型拟合优度指标" class="nav-link" data-scroll-target="#todoar-模型拟合优度指标"><span class="header-section-number">3.10</span> TODO：AR 模型拟合优度指标</a></li>
+  <li><a href="#todo用估计的-ar-模型进行预测" id="toc-todo用估计的-ar-模型进行预测" class="nav-link" data-scroll-target="#todo用估计的-ar-模型进行预测"><span class="header-section-number">3.11</span> TODO：用估计的 AR 模型进行预测</a></li>
   </ul>
 </nav>
     </div>
@@ -318,7 +322,7 @@ window.Quarto = {
 <section id="例子crsp-价值加权指数月度收益率" class="level4" data-number="3.7.0.1">
 <h4 data-number="3.7.0.1" class="anchored" data-anchor-id="例子crsp-价值加权指数月度收益率"><span class="header-section-number">3.7.0.1</span> 例子：CRSP 价值加权指数月度收益率</h4>
 <p>查看数据：</p>
-<div id="6ad5ea6a" class="cell" data-execution_count="1">
+<div id="0d174a86" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -354,7 +358,7 @@ window.Quarto = {
 </div>
 </div>
 <p>绘制 ACF 图像：</p>
-<div id="b82783c5" class="cell" data-execution_count="2">
+<div id="70838ee9" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -393,7 +397,7 @@ window.Quarto = {
 </div>
 </div>
 <p>发现 ACF 到 <span class="math inline">\(k = 21\)</span> 还没有截尾，绘制 PACF 图：</p>
-<div id="ac55848b" class="cell" data-execution_count="3">
+<div id="159cbfad" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -437,7 +441,7 @@ window.Quarto = {
 <h4 data-number="3.7.0.2" class="anchored" data-anchor-id="例子美国的国民生产总值-gnp-经过季节调整后的季度增长率"><span class="header-section-number">3.7.0.2</span> 例子：美国的国民生产总值 (GNP) 经过季节调整后的季度增长率</h4>
 <p>这是 <a href="#todo-例子美国的国民生产总值-gnp-经过季节调整后的季度增长率">TODO: 例子：美国的国民生产总值 (GNP) 经过季节调整后的季度增长率</a> 的继续，判断美国 GNP 经过季节调整后的季度增长率的 <span class="math inline">\(p\)</span> 的取值。</p>
 <p>绘制 ACF 图：</p>
-<div id="2934ee42" class="cell" data-execution_count="4">
+<div id="e3d03dd4" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -466,7 +470,7 @@ window.Quarto = {
 </div>
 </div>
 <p>ACF 图明显不截尾，绘制 PACF 图：</p>
-<div id="8a624bbb" class="cell" data-execution_count="5">
+<div id="e9b3543a" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -494,10 +498,40 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>PACF 虽然在 𝑘 = 3, 9, 14, 16 等位置超出界限，但是超出不多，可考虑用 AR(3) 建模。</p>
-
-
+<p>PACF 虽然在 <span class="math inline">\(k = 3, 9, 14, 16\)</span> 等位置超出界限，但是超出不多，可考虑用 AR(3) 建模。</p>
 </section>
+</section>
+<section id="信息准则" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="信息准则"><span class="header-section-number">3.8</span> 信息准则</h2>
+<p>信息准则是统计建模中常用的模型比较工具，其基本思想是模型拟合数据的拟合优度与模型简单化的折衷。 AIC 准则(Akaike’s Information Criterion):</p>
+<p><span class="math display">\[\mathrm{AIC}=-\frac{2}{T}\ln(\text{似然函数值})+\frac{2}{T}(\text{参数个数})\]</span></p>
+<p>其中似然函数值是在参数最大似然估计处的似然函数值。当模型为高斯AR( p) ,即<span class="math inline">\(\{\epsilon_t\}\)</span>是独立同 N<span class="math inline">\((0,\sigma^2)\)</span>序列时的AR<span class="math inline">\((p)\)</span>模型时，AIC 公式为：</p>
+<p><span class="math display">\[\mathrm{AIC}(k)=\ln\tilde{\sigma}_k^2+\frac{2k}{T}\]</span></p>
+<p>其中<span class="math inline">\(k\)</span>是模型的阶，<span class="math inline">\(\tilde{\sigma}_k^2\)</span>是阶为<span class="math inline">\(k\)</span>的条件下<span class="math inline">\(\varepsilon_t\)</span>的方差的最大似然估计。<span class="math inline">\(\ln\tilde{\sigma}_k^2\)</span>代表了模型对数据的拟合优劣，此值越大拟合越差；<span class="math inline">\(\frac{2k}{r}\)</span>是对模型复杂程度的惩罚，此值越大，模型越复杂，稳定性越差，对未来的情况的适应性也越差。在某个范围内取<span class="math inline">\(k\)</span>使得 AIC<span class="math inline">\((k)\)</span>最小，就达成了拟合优度与模型简单程度的折衷。</p>
+<p>另一个常用的信息准则是 BIC 准则 (Bayesian Information Criterion),高斯 AR 模型为：</p>
+<p><span class="math display">\[\mathrm{BIC}(k)=\ln\tilde{\sigma}_k^2+\frac{k\ln T}{T}\]</span></p>
+<p>BIC 倾向于取比 AIC 更低阶的模型。</p>
+<p>可以取 <span class="math inline">\(k = 0, 1, \cdots, P_0\)</span> 计算 AIC 或 BIC，去最小值点的 <span class="math inline">\(k\)</span>。<span class="math inline">\(P_0\)</span> 可以取为 <span class="math inline">\(10 \log_{10} T\)</span>。</p>
+</section>
+<section id="ar-模型的参数估计方法" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="ar-模型的参数估计方法"><span class="header-section-number">3.9</span> AR 模型的参数估计方法</h2>
+<p>AR 模型有多种估计方法，比如，用普通线性回归的最小二乘法估计，假设正态分布用最大似然估计，Yule-Walken 递推计算，Burg 递推计算，等等。</p>
+<p>设<span class="math inline">\(\phi_i\)</span>的估计为<span class="math inline">\(\hat{\phi}_i\)</span>,则拟合值为：</p>
+<p><span class="math display">\[\hat{x}_t=\hat{\phi}_0+\hat{\phi}_1x_{t-1}+\cdots+\hat{\phi}_px_{t-p},\:t=p+1,...,T\]</span></p>
+<p>残差为：</p>
+<p><span class="math display">\[e_t=x_t-\hat{x}_t,\:t=p+1,...,T\]</span></p>
+<p>相应的新息方差<span class="math inline">\(\sigma^2=\)</span>Var<span class="math inline">\((\varepsilon_t)\)</span>的估计为：</p>
+<p><span class="math display">\[\hat{\sigma}^2=\frac{1}{T-2p-1}\sum\limits_{t=p+1}^Te_t^2\]</span></p>
+<p>如果使用高斯条件最大似然估计(认为<span class="math inline">\(x_1,...,x_p\)</span>固定),则<span class="math inline">\(\hat{\phi}_i\)</span>估计不变，但是新息方差得估计变成了：</p>
+<p><span class="math display">\[\tilde{\sigma}^2=\frac{1}{T-p}\sum_{t=p+1}^Te_t^2=\frac{T-2p-1}{T-p}\sum_{t=p+1}^Te_t^2\]</span></p>
+</section>
+<section id="todoar-模型拟合优度指标" class="level2" data-number="3.10">
+<h2 data-number="3.10" class="anchored" data-anchor-id="todoar-模型拟合优度指标"><span class="header-section-number">3.10</span> TODO：AR 模型拟合优度指标</h2>
+</section>
+<section id="todo用估计的-ar-模型进行预测" class="level2" data-number="3.11">
+<h2 data-number="3.11" class="anchored" data-anchor-id="todo用估计的-ar-模型进行预测"><span class="header-section-number">3.11</span> TODO：用估计的 AR 模型进行预测</h2>
+
+
 </section>
 
 </main> <!-- /main -->
