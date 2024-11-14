@@ -1,3 +1,143 @@
 # 移动平均模型
 ## 移动平均模型的概念
 
+移动平均模型是具有$q$步外不相关性质的平稳列的模型；对于高阶的AR模型，有些可以用低阶的MA模型更
+好地描述。一般的AR模型也可以用高阶MA模型近似。
+
+理论上，AR模型也可以是无穷阶的：
+
+$$X_t=\phi_0+\sum_{j=1}^\infty\phi_jX_{t-j}+\varepsilon_t.$$
+
+其中$\{\phi_j\}$应绝对可和。一个特例为：
+
+$$X_t=\phi_0-\sum_{j=1}^\infty(-\theta_1)^jX_{t-j}+\varepsilon_t.$$
+
+其中$0<|\theta|<1$。将模型写成：
+
+$$X_t+\sum_{j=1}^\infty(-\theta_1)^jX_{t-j}=\phi_0+\varepsilon_t.$$
+
+以$t-1$代入，并乘以$-\theta_1$,有：
+
+$$\sum_{j=1}^\infty(-\theta_1)^jX_{t-j}=-\phi_0\theta_1-\theta_1\varepsilon_{t-1}.$$
+
+代入到上式中得：
+
+$$X_t=\phi_0(1+\theta_1)+\varepsilon_t+\theta_1\varepsilon_{t-1}.$$
+
+这样的模型称为MA(1)模型。
+
+一般地，若$\{\varepsilon_t\}$是零均值独立同分布白噪声，方差为$\sigma^2,|\theta_1|<1$,令
+
+$$X_t=\theta_0+\varepsilon_t+\theta_1\varepsilon_{t-1},$$
+
+易见$\{X_t\}$为线性时间序列形式的弱平稳列，称为MA(1)序列。
+
+类似地，MA(2)序列的模型为：
+
+$$X_t=\theta_0+\varepsilon_t+\theta_1\varepsilon_{t-1}+\theta_2\varepsilon_{t-2}.$$
+
+MA($q)$序列的模型为：
+$$X_t=\theta_0+\varepsilon_t+\theta_1\varepsilon_{t-1}+\cdots+\theta_q\varepsilon_{t-q}.$$
+
+此模型也有特征多项式：
+
+$$1+\theta_1z+\cdots+\theta_qz^q.$$
+
+特征方程的根称为特征根，特征根都在单位圆外的条件称为MA模型的可逆条件。 平稳性并不需要特征根的
+条件。
+
+上面从AR($\infty$) 导 出 MA(1) 的 过 程 , 实 际 用 了 滞 后 算 子 的 一 些 运 算 法 则 : 设 P( z) = \sum _{j= 0}^\infty \phi _jz^j$和 $Q( z) = \sum _{j= 0}^\infty \theta _jz^j$, $\sum _{j= 0}^\infty | \phi _j| < \infty , \sum _{j= 0}^\infty | \theta _j| < \infty$,则：
+
+$$P(z)Q(z)=R(z)=\sum_{j=0}^\infty r_jz^j,$$
+
+其中：
+
+$$r_j=\sum_{i=0}^j\phi_i\theta_{j-i},$$
+
+且对弱平稳列$\{\xi_t\}$有：
+
+$$P(B)Q(B)\xi_t=R(B)\xi_t.$$
+
+## 移动平均模型的性质
+
+以 MA(1) 和 MA(2) 为例讨论 MA 序列的性质，一般 MA(q) 序列类似讨论即可。
+
+### 平稳性与自相关函数性质
+
+以MA(1)为例。$X_t=\theta_0+\varepsilon_t+\theta_1\varepsilon_{t-1}$, 其中$\{\varepsilon_t\}$是零均值独立同分布白噪声，$\theta_0,\theta_1$是任意实数，平稳性不需要特征根的条件。
+
+易见：
+
+$$EX_t=\theta_0,\:\forall t,\quad\mathrm{Var}(X_t)=\sigma^2(1+\theta_1^2)=\gamma_0.$$
+
+而：
+
+$$\gamma_1=E[(X_t-\theta_0)(X_{t-1}-\theta_0)]=E[(\varepsilon_t+\theta_1\varepsilon_{t-1})(\varepsilon_{t-1}+\theta_1\varepsilon_{t-2})]=\theta_1E\varepsilon_{t-1}^2=\sigma^2\theta_1.$$
+
+对$k>1$有
+
+$$\gamma_k=E[(\varepsilon_t+\theta_1\varepsilon_{t-1})(\varepsilon_{t-k}+\theta_1\varepsilon_{t-k-1})]=0\:(k>1).$$
+
+因为$k>1$,所以$t-k-1<t-k<t-1<t$,求协方差时均不相关。
+
+所以，对于MA(1)序列，有：
+
+$$\gamma_k=\left\{\begin{array}{ll}\sigma^2(1+\theta_1^2),&k=0,\\\sigma^2\theta_1,&k=1,\\0,&k>1.\end{array}\right.$$
+
+相应地，MA(1)的自相关函数为：
+
+$$\rho_k=\left\{\begin{array}{ll}1,&k=0,\\\frac{\theta_1}{1+\theta_1^2},&k=1,\\0,&k>1.\end{array}\right.$$
+
+这就验证了MA(1)序列是弱平稳列。 MA(1)的自相关函数在$k>1$后为零的性质叫做MA序列的自相关函数截尾性。
+
+对于MA$(q)$序列：
+
+$$X_t=\theta_0+\varepsilon_t+\theta_1\varepsilon_{t-1}+\cdots+\theta_q\varepsilon_{t-q},$$
+
+易见：
+
+$$EX_t=\theta_0,\quad\mathrm{Var}(X_t)=\sigma^2(1+\theta_1^2+\cdots+\theta_q^2)=\gamma_0.$$
+
+其自相关函数$\rho_k$也满足$q$后截尾性，即$\rho_k=0,\forall k>q$。如果$\theta_q\neq0$,则$\rho_q\neq0$。这样，MA$(q)$序列的两个时间点的观测$X_s$和$X_t$ 当$|s-t|>q$时不相关，代表了一种特殊的“有限记忆”的模型。MA序列的自相关函数截尾性也是在模型识别和定阶时的重要依据。
+
+### 可逆性
+
+对MA(1)模型，当$|\theta_1|<1$时，根据本章开始的推导可得：
+
+$$\varepsilon_t=-\phi_0+X_t+\sum_{j=1}^\infty(-\theta_1)^jX_{t-j}.$$
+
+其中的级数是可以在a.s.意义和均方意义下收敛的。这表明新息$\varepsilon_t$可以用当前的观测$X_t$以及历史观测$X_{t-j},j=1,2,\ldots$的线性组合表示，而且历史观测$X_{t-j}$所在时刻离$t$时刻越远，其作用越小。这种性质叫做模型的可逆性。MA模型的平稳性不需要可逆性条件，但是从理论讨论的角度，可逆的线性时间序列更合理：$\{X_t,X_{t-1},\ldots\}$与$\{\varepsilon_t,\varepsilon_{t-1},\ldots\}$可以互相线性表示，对任意$t\in\mathbb{Z}$成立。
+
+## 移动平均模型定阶
+
+MA$(q)$序列的理论自相关函数$\rho_k$在$q$后截尾，$\rho_q\neq0,\rho_k=0,k>q$。
+
+在$\{X_t\}$为独立同分布白噪声列的条件下，$k>0$的$\hat{\rho}_k$渐近$\mathbb{N}(0,\frac1T)$分布，所以查看ACF图，最后一个显著不等于零的$\hat{\rho}_k$的位置可以暂定为MA模型的阶。
+
+实际上，如$\{X_t\}$是MA$(q)$序列，则对$k>q,\sqrt T\hat{\rho}_k$渐近服从正态分布，渐近均值为零，渐近方差为：
+
+$$1+2\rho_1^2+\cdots+2\rho_q^2.$$
+
+也可以用AIC定阶：
+
+$$\mathrm{AIC}(k)=\ln\hat{\sigma}_{k}^{2}+\frac{2k}{T}.$$
+
+其中$\hat{\sigma}_k^2$是用MA$(k)$建模时新息方差的最大似然估计。
+
+#### 例子：CRSP 等权指数月度收益率
+
+查看数据：
+
+```{python}
+{{< include _sample_crsp_1.py >}}
+{{< include _sample_crsp_2.py >}}
+```
+
+绘制 ACF 图像：
+
+```{python}
+{{< include _sample_crsp_1.py >}}
+{{< include _sample_crsp_3.py >}}
+```
+
+可以看出，ACF 在 $k = 1$ 时很大，$k = 3, k = 9$ 也较明显。可以考虑拟合 MA(3) 或 MA(9)。
