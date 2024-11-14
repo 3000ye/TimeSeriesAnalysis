@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -70,6 +104,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -151,6 +214,13 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#移动平均模型的概念" id="toc-移动平均模型的概念" class="nav-link active" data-scroll-target="#移动平均模型的概念"><span class="header-section-number">4.1</span> 移动平均模型的概念</a></li>
+  <li><a href="#移动平均模型的性质" id="toc-移动平均模型的性质" class="nav-link" data-scroll-target="#移动平均模型的性质"><span class="header-section-number">4.2</span> 移动平均模型的性质</a>
+  <ul class="collapse">
+  <li><a href="#平稳性与自相关函数性质" id="toc-平稳性与自相关函数性质" class="nav-link" data-scroll-target="#平稳性与自相关函数性质"><span class="header-section-number">4.2.1</span> 平稳性与自相关函数性质</a></li>
+  <li><a href="#可逆性" id="toc-可逆性" class="nav-link" data-scroll-target="#可逆性"><span class="header-section-number">4.2.2</span> 可逆性</a></li>
+  </ul></li>
+  <li><a href="#移动平均模型定阶" id="toc-移动平均模型定阶" class="nav-link" data-scroll-target="#移动平均模型定阶"><span class="header-section-number">4.3</span> 移动平均模型定阶</a></li>
+  <li><a href="#移动平均模型的估计" id="toc-移动平均模型的估计" class="nav-link" data-scroll-target="#移动平均模型的估计"><span class="header-section-number">4.4</span> 移动平均模型的估计</a></li>
   </ul>
 </nav>
     </div>
@@ -178,6 +248,166 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="移动平均模型的概念" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="移动平均模型的概念"><span class="header-section-number">4.1</span> 移动平均模型的概念</h2>
+<p>移动平均模型是具有<span class="math inline">\(q\)</span>步外不相关性质的平稳列的模型；对于高阶的AR模型，有些可以用低阶的MA模型更 好地描述。一般的AR模型也可以用高阶MA模型近似。</p>
+<p>理论上，AR模型也可以是无穷阶的：</p>
+<p><span class="math display">\[X_t=\phi_0+\sum_{j=1}^\infty\phi_jX_{t-j}+\varepsilon_t.\]</span></p>
+<p>其中<span class="math inline">\(\{\phi_j\}\)</span>应绝对可和。一个特例为：</p>
+<p><span class="math display">\[X_t=\phi_0-\sum_{j=1}^\infty(-\theta_1)^jX_{t-j}+\varepsilon_t.\]</span></p>
+<p>其中<span class="math inline">\(0&lt;|\theta|&lt;1\)</span>。将模型写成：</p>
+<p><span class="math display">\[X_t+\sum_{j=1}^\infty(-\theta_1)^jX_{t-j}=\phi_0+\varepsilon_t.\]</span></p>
+<p>以<span class="math inline">\(t-1\)</span>代入，并乘以<span class="math inline">\(-\theta_1\)</span>,有：</p>
+<p><span class="math display">\[\sum_{j=1}^\infty(-\theta_1)^jX_{t-j}=-\phi_0\theta_1-\theta_1\varepsilon_{t-1}.\]</span></p>
+<p>代入到上式中得：</p>
+<p><span class="math display">\[X_t=\phi_0(1+\theta_1)+\varepsilon_t+\theta_1\varepsilon_{t-1}.\]</span></p>
+<p>这样的模型称为MA(1)模型。</p>
+<p>一般地，若<span class="math inline">\(\{\varepsilon_t\}\)</span>是零均值独立同分布白噪声，方差为<span class="math inline">\(\sigma^2,|\theta_1|&lt;1\)</span>,令</p>
+<p><span class="math display">\[X_t=\theta_0+\varepsilon_t+\theta_1\varepsilon_{t-1},\]</span></p>
+<p>易见<span class="math inline">\(\{X_t\}\)</span>为线性时间序列形式的弱平稳列，称为MA(1)序列。</p>
+<p>类似地，MA(2)序列的模型为：</p>
+<p><span class="math display">\[X_t=\theta_0+\varepsilon_t+\theta_1\varepsilon_{t-1}+\theta_2\varepsilon_{t-2}.\]</span></p>
+<p>MA(<span class="math inline">\(q)\)</span>序列的模型为： <span class="math display">\[X_t=\theta_0+\varepsilon_t+\theta_1\varepsilon_{t-1}+\cdots+\theta_q\varepsilon_{t-q}.\]</span></p>
+<p>此模型也有特征多项式：</p>
+<p><span class="math display">\[1+\theta_1z+\cdots+\theta_qz^q.\]</span></p>
+<p>特征方程的根称为特征根，特征根都在单位圆外的条件称为MA模型的可逆条件。 平稳性并不需要特征根的 条件。</p>
+<p>上面从AR(<span class="math inline">\(\infty\)</span>) 导 出 MA(1) 的 过 程 , 实 际 用 了 滞 后 算 子 的 一 些 运 算 法 则 : 设 P( z) = _{j= 0}^_jz^j$和 <span class="math inline">\(Q( z) = \sum _{j= 0}^\infty \theta _jz^j\)</span>, <span class="math inline">\(\sum _{j= 0}^\infty | \phi _j| &lt; \infty , \sum _{j= 0}^\infty | \theta _j| &lt; \infty\)</span>,则：</p>
+<p><span class="math display">\[P(z)Q(z)=R(z)=\sum_{j=0}^\infty r_jz^j,\]</span></p>
+<p>其中：</p>
+<p><span class="math display">\[r_j=\sum_{i=0}^j\phi_i\theta_{j-i},\]</span></p>
+<p>且对弱平稳列<span class="math inline">\(\{\xi_t\}\)</span>有：</p>
+<p><span class="math display">\[P(B)Q(B)\xi_t=R(B)\xi_t.\]</span></p>
+</section>
+<section id="移动平均模型的性质" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="移动平均模型的性质"><span class="header-section-number">4.2</span> 移动平均模型的性质</h2>
+<p>以 MA(1) 和 MA(2) 为例讨论 MA 序列的性质，一般 MA(q) 序列类似讨论即可。</p>
+<section id="平稳性与自相关函数性质" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="平稳性与自相关函数性质"><span class="header-section-number">4.2.1</span> 平稳性与自相关函数性质</h3>
+<p>以MA(1)为例。<span class="math inline">\(X_t=\theta_0+\varepsilon_t+\theta_1\varepsilon_{t-1}\)</span>, 其中<span class="math inline">\(\{\varepsilon_t\}\)</span>是零均值独立同分布白噪声，<span class="math inline">\(\theta_0,\theta_1\)</span>是任意实数，平稳性不需要特征根的条件。</p>
+<p>易见：</p>
+<p><span class="math display">\[EX_t=\theta_0,\:\forall t,\quad\mathrm{Var}(X_t)=\sigma^2(1+\theta_1^2)=\gamma_0.\]</span></p>
+<p>而：</p>
+<p><span class="math display">\[\gamma_1=E[(X_t-\theta_0)(X_{t-1}-\theta_0)]=E[(\varepsilon_t+\theta_1\varepsilon_{t-1})(\varepsilon_{t-1}+\theta_1\varepsilon_{t-2})]=\theta_1E\varepsilon_{t-1}^2=\sigma^2\theta_1.\]</span></p>
+<p>对<span class="math inline">\(k&gt;1\)</span>有</p>
+<p><span class="math display">\[\gamma_k=E[(\varepsilon_t+\theta_1\varepsilon_{t-1})(\varepsilon_{t-k}+\theta_1\varepsilon_{t-k-1})]=0\:(k&gt;1).\]</span></p>
+<p>因为<span class="math inline">\(k&gt;1\)</span>,所以<span class="math inline">\(t-k-1&lt;t-k&lt;t-1&lt;t\)</span>,求协方差时均不相关。</p>
+<p>所以，对于MA(1)序列，有：</p>
+<p><span class="math display">\[\gamma_k=\left\{\begin{array}{ll}\sigma^2(1+\theta_1^2),&amp;k=0,\\\sigma^2\theta_1,&amp;k=1,\\0,&amp;k&gt;1.\end{array}\right.\]</span></p>
+<p>相应地，MA(1)的自相关函数为：</p>
+<p><span class="math display">\[\rho_k=\left\{\begin{array}{ll}1,&amp;k=0,\\\frac{\theta_1}{1+\theta_1^2},&amp;k=1,\\0,&amp;k&gt;1.\end{array}\right.\]</span></p>
+<p>这就验证了MA(1)序列是弱平稳列。 MA(1)的自相关函数在<span class="math inline">\(k&gt;1\)</span>后为零的性质叫做MA序列的自相关函数截尾性。</p>
+<p>对于MA<span class="math inline">\((q)\)</span>序列：</p>
+<p><span class="math display">\[X_t=\theta_0+\varepsilon_t+\theta_1\varepsilon_{t-1}+\cdots+\theta_q\varepsilon_{t-q},\]</span></p>
+<p>易见：</p>
+<p><span class="math display">\[EX_t=\theta_0,\quad\mathrm{Var}(X_t)=\sigma^2(1+\theta_1^2+\cdots+\theta_q^2)=\gamma_0.\]</span></p>
+<p>其自相关函数<span class="math inline">\(\rho_k\)</span>也满足<span class="math inline">\(q\)</span>后截尾性，即<span class="math inline">\(\rho_k=0,\forall k&gt;q\)</span>。如果<span class="math inline">\(\theta_q\neq0\)</span>,则<span class="math inline">\(\rho_q\neq0\)</span>。这样，MA<span class="math inline">\((q)\)</span>序列的两个时间点的观测<span class="math inline">\(X_s\)</span>和<span class="math inline">\(X_t\)</span> 当<span class="math inline">\(|s-t|&gt;q\)</span>时不相关，代表了一种特殊的“有限记忆”的模型。MA序列的自相关函数截尾性也是在模型识别和定阶时的重要依据。</p>
+</section>
+<section id="可逆性" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="可逆性"><span class="header-section-number">4.2.2</span> 可逆性</h3>
+<p>对MA(1)模型，当<span class="math inline">\(|\theta_1|&lt;1\)</span>时，根据本章开始的推导可得：</p>
+<p><span class="math display">\[\varepsilon_t=-\phi_0+X_t+\sum_{j=1}^\infty(-\theta_1)^jX_{t-j}.\]</span></p>
+<p>其中的级数是可以在a.s.意义和均方意义下收敛的。这表明新息<span class="math inline">\(\varepsilon_t\)</span>可以用当前的观测<span class="math inline">\(X_t\)</span>以及历史观测<span class="math inline">\(X_{t-j},j=1,2,\ldots\)</span>的线性组合表示，而且历史观测<span class="math inline">\(X_{t-j}\)</span>所在时刻离<span class="math inline">\(t\)</span>时刻越远，其作用越小。这种性质叫做模型的可逆性。MA模型的平稳性不需要可逆性条件，但是从理论讨论的角度，可逆的线性时间序列更合理：<span class="math inline">\(\{X_t,X_{t-1},\ldots\}\)</span>与<span class="math inline">\(\{\varepsilon_t,\varepsilon_{t-1},\ldots\}\)</span>可以互相线性表示，对任意<span class="math inline">\(t\in\mathbb{Z}\)</span>成立。</p>
+</section>
+</section>
+<section id="移动平均模型定阶" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="移动平均模型定阶"><span class="header-section-number">4.3</span> 移动平均模型定阶</h2>
+<p>MA<span class="math inline">\((q)\)</span>序列的理论自相关函数<span class="math inline">\(\rho_k\)</span>在<span class="math inline">\(q\)</span>后截尾，<span class="math inline">\(\rho_q\neq0,\rho_k=0,k&gt;q\)</span>。</p>
+<p>在<span class="math inline">\(\{X_t\}\)</span>为独立同分布白噪声列的条件下，<span class="math inline">\(k&gt;0\)</span>的<span class="math inline">\(\hat{\rho}_k\)</span>渐近<span class="math inline">\(\mathbb{N}(0,\frac1T)\)</span>分布，所以查看ACF图，最后一个显著不等于零的<span class="math inline">\(\hat{\rho}_k\)</span>的位置可以暂定为MA模型的阶。</p>
+<p>实际上，如<span class="math inline">\(\{X_t\}\)</span>是MA<span class="math inline">\((q)\)</span>序列，则对<span class="math inline">\(k&gt;q,\sqrt T\hat{\rho}_k\)</span>渐近服从正态分布，渐近均值为零，渐近方差为：</p>
+<p><span class="math display">\[1+2\rho_1^2+\cdots+2\rho_q^2.\]</span></p>
+<p>也可以用AIC定阶：</p>
+<p><span class="math display">\[\mathrm{AIC}(k)=\ln\hat{\sigma}_{k}^{2}+\frac{2k}{T}.\]</span></p>
+<p>其中<span class="math inline">\(\hat{\sigma}_k^2\)</span>是用MA<span class="math inline">\((k)\)</span>建模时新息方差的最大似然估计。</p>
+<section id="例子crsp-等权指数月度收益率" class="level4" data-number="4.3.0.1">
+<h4 data-number="4.3.0.1" class="anchored" data-anchor-id="例子crsp-等权指数月度收益率"><span class="header-section-number">4.3.0.1</span> 例子：CRSP 等权指数月度收益率</h4>
+<p>查看数据：</p>
+<div id="da82f5bd" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> []</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../ftsdata/m-ibm3dx2608.txt"</span>, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> line <span class="kw">in</span> <span class="bu">file</span>.readlines():</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> line.strip(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>).strip(<span class="st">" "</span>).replace(<span class="st">"</span><span class="ch">\t</span><span class="st">"</span>, <span class="st">" "</span>).split(<span class="st">" "</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> <span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> x: x <span class="op">!=</span> <span class="st">""</span>, line))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        raw_data.append(line)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame(raw_data[<span class="dv">1</span>:], columns<span class="op">=</span>raw_data[<span class="dv">0</span>])</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"date"</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">"date"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"%Y%m</span><span class="sc">%d</span><span class="st">"</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>data.set_index(<span class="st">"date"</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.<span class="bu">apply</span>(pd.to_numeric)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>data.head()</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>))</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>plt.plot(data[<span class="st">"ewrtn"</span>], label<span class="op">=</span><span class="st">'Equal Weighted Return'</span>, color<span class="op">=</span><span class="st">"green"</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'CRSP Equal Weighted Index Monthly Return'</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Equal Weighted'</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="4-移动平均模型_files/figure-html/cell-2-output-1.png" width="674" height="357" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>绘制 ACF 图像：</p>
+<div id="a2ba4e9c" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> []</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../ftsdata/m-ibm3dx2608.txt"</span>, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> line <span class="kw">in</span> <span class="bu">file</span>.readlines():</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> line.strip(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>).strip(<span class="st">" "</span>).replace(<span class="st">"</span><span class="ch">\t</span><span class="st">"</span>, <span class="st">" "</span>).split(<span class="st">" "</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> <span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> x: x <span class="op">!=</span> <span class="st">""</span>, line))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        raw_data.append(line)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame(raw_data[<span class="dv">1</span>:], columns<span class="op">=</span>raw_data[<span class="dv">0</span>])</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>data[<span class="st">"date"</span>] <span class="op">=</span> pd.to_datetime(data[<span class="st">"date"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"%Y%m</span><span class="sc">%d</span><span class="st">"</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>data.set_index(<span class="st">"date"</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.<span class="bu">apply</span>(pd.to_numeric)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>data.head()</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>))</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plt.gca()  <span class="co"># 获取当前的轴对象</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>plot_acf(data[<span class="st">"ewrtn"</span>], ax<span class="op">=</span>ax, lags<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="op">-</span><span class="fl">0.2</span>, <span class="fl">0.4</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Lag'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)  <span class="co"># 设置横轴标签</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'ACF of Equal Weighted Return'</span>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="4-移动平均模型_files/figure-html/cell-3-output-1.png" width="656" height="384" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>可以看出，ACF 在 <span class="math inline">\(k = 1\)</span> 时很大，<span class="math inline">\(k = 3, k = 9\)</span> 也较明显。可以考虑拟合 MA(3) 或 MA(9)。</p>
+</section>
+</section>
+<section id="移动平均模型的估计" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="移动平均模型的估计"><span class="header-section-number">4.4</span> 移动平均模型的估计</h2>
+<p>MA模型参数的估计方法有：</p>
+<ul>
+<li>矩估计法，利用<span class="math inline">\(\{\gamma_k\}\)</span>与<span class="math inline">\(\{\theta_k\}\)</span>、<span class="math inline">\(\sigma^2\)</span>的关系求非线性方程组解；</li>
+<li>逆相关函数法，将MA模型转换为长阶自回归模型，用估计自回归模型的方法估计，能保证可逆性</li>
+<li>新息估计法；</li>
+<li>条件最大似然估计法；</li>
+<li>精确最大似然估计法。</li>
+</ul>
+<p>条件最大似然估计法和完全最大似然估计法都假定<span class="math inline">\(\{\varepsilon_t\}\)</span>为高斯白噪声，计算似然函数。在条件最大似然估计法中，近似假定<span class="math inline">\(\varepsilon_t=0,t\leq0\)</span>,这样就可以得到<span class="math inline">\(\varepsilon_1=x_1-\theta_0,\varepsilon_2=x_2-\theta_0-\theta_1\varepsilon_1\)</span>等递推表示，将其代入<span class="math inline">\(\varepsilon_t,t=1,2,\ldots,T\)</span>的独立联合正态分布密度中就得到了条件似然函数，求其关于<span class="math inline">\(\sigma^2\)</span>和<span class="math inline">\(\theta_0,\theta_1,\ldots,\theta_q\)</span>的最大值点。</p>
+<p>在精确最大似然估计中，将<span class="math inline">\(\varepsilon_t,t=1-q,2-q,\ldots,-1,0\)</span>也作为未知参数，与其它模型参数一起估计。条件最大似然估计更容易计算，在<span class="math inline">\(T\)</span>充分大时两者的结果趋于相同。在样本量较小时精确最大似然估计结果更为精确。</p>
 
 
 </section>
