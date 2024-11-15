@@ -308,5 +308,25 @@
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>移动平均模型</span>"
     ]
+  },
+  {
+    "objectID": "Ch4/4-移动平均模型.html#移动平均模型的预测",
+    "href": "Ch4/4-移动平均模型.html#移动平均模型的预测",
+    "title": "4  移动平均模型",
+    "section": "4.5 移动平均模型的预测",
+    "text": "4.5 移动平均模型的预测\n因为MA\\((q)\\)序列在间隔超过\\(q\\)步以后就独立，所以超前多步预测，只能预测到\\(q\\)步，从\\(q+1\\)步开始就只能用均值\\(\\mu\\)预测了。\n以MA(1)为例，\n\\[X_t=\\theta_0+\\varepsilon_t+\\theta_1\\varepsilon_{t-1}.\\]\n超前一步：\n\\[\\hat{x}_h(1)=E(X_{h+1}|x_1,\\ldots,x_h)=\\theta_0+\\theta_1\\varepsilon_h.\\]\n这里利用了\\(E(\\varepsilon_{h+1}|x_1,\\ldots,x_h)=0\\)。\\(\\varepsilon_h\\) 是第\\(h\\)个新息，可以作为模型的残差计算，或者通过将MA模型表达为AR模型来计算。\n超前两步：\n\\[\\hat{x}_h(2)=E(\\theta_0+\\varepsilon_{h+2}+\\theta_1\\varepsilon_{h+1}|x_1,\\ldots,x_h)=\\theta_0\\]\n从两步开始的超前多步预报就变成\\(EX_t=\\theta_0\\)了。\n类似地，对于MA(2)序列，\n\\[\\hat{x}_h(1)=\\theta_0+\\theta_1\\varepsilon_h+\\theta_2\\varepsilon_{h-1},\\:\\hat{x}_h(2)=\\theta_0+\\theta_2\\varepsilon_h.\\]\n对\\(k=3,4,\\ldots\\)则有\\(\\hat{x}_h(k)=\\theta_0=EX_t.\\)",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>移动平均模型</span>"
+    ]
+  },
+  {
+    "objectID": "Ch4/4-移动平均模型.html#ar-和-ma-的小结",
+    "href": "Ch4/4-移动平均模型.html#ar-和-ma-的小结",
+    "title": "4  移动平均模型",
+    "section": "4.6 AR 和 MA 的小结",
+    "text": "4.6 AR 和 MA 的小结\n\n对MA(\\(q\\))模型，ACF对定阶有意义，因为其\\(q\\)后截尾\n对AR\\((p)\\)模型，PACF对定阶有意义，因为其\\(p\\)后截尾\nMA模型的序列不管系数如何总是平稳的，实际上还是因果线性时间序列，当特征根都在单位圆外时是可逆的\nAR模型只有当特征根都在单位圆外时才有\\(\\epsilon_t\\) 与\\(X_{t-1},X_{t-2},\\ldots\\)独立的弱平稳解\n对AR和MA序列，超前多步预测趋于序列的均值、预测均方误差趋于序列的方差",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>移动平均模型</span>"
+    ]
   }
 ]

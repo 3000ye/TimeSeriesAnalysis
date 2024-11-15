@@ -221,6 +221,8 @@ window.Quarto = {
   </ul></li>
   <li><a href="#移动平均模型定阶" id="toc-移动平均模型定阶" class="nav-link" data-scroll-target="#移动平均模型定阶"><span class="header-section-number">4.3</span> 移动平均模型定阶</a></li>
   <li><a href="#移动平均模型的估计" id="toc-移动平均模型的估计" class="nav-link" data-scroll-target="#移动平均模型的估计"><span class="header-section-number">4.4</span> 移动平均模型的估计</a></li>
+  <li><a href="#移动平均模型的预测" id="toc-移动平均模型的预测" class="nav-link" data-scroll-target="#移动平均模型的预测"><span class="header-section-number">4.5</span> 移动平均模型的预测</a></li>
+  <li><a href="#ar-和-ma-的小结" id="toc-ar-和-ma-的小结" class="nav-link" data-scroll-target="#ar-和-ma-的小结"><span class="header-section-number">4.6</span> AR 和 MA 的小结</a></li>
   </ul>
 </nav>
     </div>
@@ -319,7 +321,7 @@ window.Quarto = {
 <section id="例子crsp-等权指数月度收益率" class="level4" data-number="4.3.0.1">
 <h4 data-number="4.3.0.1" class="anchored" data-anchor-id="例子crsp-等权指数月度收益率"><span class="header-section-number">4.3.0.1</span> 例子：CRSP 等权指数月度收益率</h4>
 <p>查看数据：</p>
-<div id="da82f5bd" class="cell" data-execution_count="1">
+<div id="733e46de" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -355,7 +357,7 @@ window.Quarto = {
 </div>
 </div>
 <p>绘制 ACF 图像：</p>
-<div id="a2ba4e9c" class="cell" data-execution_count="2">
+<div id="f0509956" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -408,6 +410,31 @@ window.Quarto = {
 </ul>
 <p>条件最大似然估计法和完全最大似然估计法都假定<span class="math inline">\(\{\varepsilon_t\}\)</span>为高斯白噪声，计算似然函数。在条件最大似然估计法中，近似假定<span class="math inline">\(\varepsilon_t=0,t\leq0\)</span>,这样就可以得到<span class="math inline">\(\varepsilon_1=x_1-\theta_0,\varepsilon_2=x_2-\theta_0-\theta_1\varepsilon_1\)</span>等递推表示，将其代入<span class="math inline">\(\varepsilon_t,t=1,2,\ldots,T\)</span>的独立联合正态分布密度中就得到了条件似然函数，求其关于<span class="math inline">\(\sigma^2\)</span>和<span class="math inline">\(\theta_0,\theta_1,\ldots,\theta_q\)</span>的最大值点。</p>
 <p>在精确最大似然估计中，将<span class="math inline">\(\varepsilon_t,t=1-q,2-q,\ldots,-1,0\)</span>也作为未知参数，与其它模型参数一起估计。条件最大似然估计更容易计算，在<span class="math inline">\(T\)</span>充分大时两者的结果趋于相同。在样本量较小时精确最大似然估计结果更为精确。</p>
+</section>
+<section id="移动平均模型的预测" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="移动平均模型的预测"><span class="header-section-number">4.5</span> 移动平均模型的预测</h2>
+<p>因为MA<span class="math inline">\((q)\)</span>序列在间隔超过<span class="math inline">\(q\)</span>步以后就独立，所以超前多步预测，只能预测到<span class="math inline">\(q\)</span>步，从<span class="math inline">\(q+1\)</span>步开始就只能用均值<span class="math inline">\(\mu\)</span>预测了。</p>
+<p>以MA(1)为例，</p>
+<p><span class="math display">\[X_t=\theta_0+\varepsilon_t+\theta_1\varepsilon_{t-1}.\]</span></p>
+<p>超前一步：</p>
+<p><span class="math display">\[\hat{x}_h(1)=E(X_{h+1}|x_1,\ldots,x_h)=\theta_0+\theta_1\varepsilon_h.\]</span></p>
+<p>这里利用了<span class="math inline">\(E(\varepsilon_{h+1}|x_1,\ldots,x_h)=0\)</span>。<span class="math inline">\(\varepsilon_h\)</span> 是第<span class="math inline">\(h\)</span>个新息，可以作为模型的残差计算，或者通过将MA模型表达为AR模型来计算。</p>
+<p>超前两步：</p>
+<p><span class="math display">\[\hat{x}_h(2)=E(\theta_0+\varepsilon_{h+2}+\theta_1\varepsilon_{h+1}|x_1,\ldots,x_h)=\theta_0\]</span></p>
+<p>从两步开始的超前多步预报就变成<span class="math inline">\(EX_t=\theta_0\)</span>了。</p>
+<p>类似地，对于MA(2)序列，</p>
+<p><span class="math display">\[\hat{x}_h(1)=\theta_0+\theta_1\varepsilon_h+\theta_2\varepsilon_{h-1},\:\hat{x}_h(2)=\theta_0+\theta_2\varepsilon_h.\]</span></p>
+<p>对<span class="math inline">\(k=3,4,\ldots\)</span>则有<span class="math inline">\(\hat{x}_h(k)=\theta_0=EX_t.\)</span></p>
+</section>
+<section id="ar-和-ma-的小结" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="ar-和-ma-的小结"><span class="header-section-number">4.6</span> AR 和 MA 的小结</h2>
+<ul>
+<li>对MA(<span class="math inline">\(q\)</span>)模型，ACF对定阶有意义，因为其<span class="math inline">\(q\)</span>后截尾</li>
+<li>对AR<span class="math inline">\((p)\)</span>模型，PACF对定阶有意义，因为其<span class="math inline">\(p\)</span>后截尾</li>
+<li>MA模型的序列不管系数如何总是平稳的，实际上还是因果线性时间序列，当特征根都在单位圆外时是可逆的</li>
+<li>AR模型只有当特征根都在单位圆外时才有<span class="math inline">\(\epsilon_t\)</span> 与<span class="math inline">\(X_{t-1},X_{t-2},\ldots\)</span>独立的弱平稳解</li>
+<li>对AR和MA序列，超前多步预测趋于序列的均值、预测均方误差趋于序列的方差</li>
+</ul>
 
 
 </section>
