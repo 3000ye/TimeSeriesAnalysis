@@ -1,0 +1,83 @@
+# ARMA 模型
+## ARMA 模型的概念
+
+AR 模型有偏自相关函数截尾性质；MA 模型有相关函数截尾性质。有些因果线性时间序列有与 AR 和 MA 类似的
+表现，但是不能在低阶实现偏自相关函数截尾或者相关函数截尾。
+
+ARMA 模型结合了 AR 和 MA 模型，在对数据拟合优度相近的情况下往往可以得到更简单的模型，而且不要求偏自
+相关函数截尾也不要求相关函数截尾。
+
+ARMA(1,1)模型为：
+
+$$X_{t}=\phi_{0}+\phi_{1}X_{t-1}+\varepsilon_{t}+\theta_{1}\varepsilon_{t-1}$$
+
+或：
+
+$$X_t-\phi_1X_{t-1}=\phi_0+\varepsilon_t+\theta_1\varepsilon_{t-1}$$
+
+其中$|\phi_1|<1,|\theta_1|<1,-\phi_1\neq\theta_1$。$\{\varepsilon_t\}$是独立同分布零均值白噪声列$,\varepsilon_t$与$X_t-1,X_{t-2},...$独立。
+
+一般的 ARMA$(p,q)$类似。
+
+AR$(p)$可以看成 ARMA$(p,0)$,MA$(q)$可以看成是 ARMA$(0,q)$。
+
+在 ARMA(1,1)的系数条件中，$|\phi_1|<1$是平稳解条件，$|\theta_1|<1$是可逆性条件，$-\phi_1\neq\theta_1$是为了模型不至于退化。模型也可以写成：
+
+$$(1-\phi_1B)X_t=\phi_0+(1+\theta_1B)\varepsilon_t$$
+
+如果不加这个条件，两边的滞后算子的多项式就可以消去。
+
+## ARMA 模型的性质
+
+形式地：
+
+$$
+\begin{aligned}
+&\frac{1}{1-\phi_{1}z} =\sum_{j=0}^{\infty}\phi_{1}^{j}z^{j}, \\
+&\frac{1}{1-\phi_{1}B} = \sum_{j=0}^{\infty}\phi_{1}^{j}B^{j}, \\
+&\frac{1+\theta_{1}z}{1-\phi_{1}z}= 1+(\phi_{1}+\theta_{1})\sum_{j=1}^{\infty}\phi_{1}^{j-1}z^{j}, \\
+&\frac{1+\theta_{1}B}{1-\phi_{1}B}= 1+(\phi_{1}+\theta_{1})\sum_{j=1}^{\infty}\phi_{1}^{j-1}B^{j}, 
+\end{aligned}
+$$
+
+于是：
+
+$$
+\begin{aligned}
+X_{t}=& \frac{1}{1-\phi_{1}B}\left\{\phi_{0}+(1+\theta_{1}B)\varepsilon_{t}\right\} \\
+=& \frac{\phi_{0}}{1-\phi_{1}}+\frac{1+\theta_{1}B}{1-\phi_{1}B}\varepsilon_{t} \\
+=& \frac{\phi_{0}}{1-\phi_{1}}+\varepsilon_{t}+(\phi_{1}+\theta_{1})\sum_{j=1}^{\infty}\phi_{1}^{j-1}\varepsilon_{t-j} 
+\end{aligned}
+$$
+
+这是因果型线性时间序列，是弱平稳的，满足上述 ARMA(1,1) 模型方程。
+
+$$\begin{aligned}EX_{t}=&\frac{\phi_{0}}{1-\phi_{1}},\\\mathrm{Var}(X_{t})=&\sigma^{2}\left(1+(\phi_{1}+\theta_{1})^{2}\sum_{j=1}^{\infty}(\phi_{1}^{2})^{j-1}\right)=\sigma^{2}\frac{1+\theta_{1}^{2}+2\phi_{1}\theta_{1}}{1-\phi_{1}^{2}}\end{aligned}$$
+
+由方差的表达式可知$|\phi_1|<1$是平稳性的必要条件。
+
+ARMA(1,1) 的自相关函数为：
+
+$$\rho_k=\begin{cases}\dfrac{(\phi_1+\theta_1)(1+\phi_1\theta_1)}{1+2\phi_1\theta_1+\theta_1^2},&k=1\\[2ex]\phi_1\rho_{k-1}=\phi_1^{k-1}\rho_1,&k\ge2\end{cases}$$
+
+所以 ARMA(1,1) 的 ACF 与 AR(1) 的 ACF 很相似，但是从$k=2$处才开始负指数衰减。与 AR 类似，自相关函
+数不能有限步截尾。
+
+ARMA(1,1)的偏自相关函数与 MA(1)的偏自相关函数类似，但负指数衰减从$k=2$开始，也不能在有限步截尾。
+
+总之，ARMA(1,1) 的平稳性条件与$\operatorname{AR}(1)$相同，自相关函数与偏自相关函数均不能有限步截尾(设$\phi_1\neq0,\theta_1\neq0)$ 。
+
+## 一般 ARMA 模型
+
+一般 ARMA 模型为：
+
+$$X_t=\phi_0+\phi_1X_{t-1}+\cdots+\phi_pX_{t-p}+\varepsilon_t+\theta_1\varepsilon_{t-1}+\cdots+\theta_q\varepsilon_{t-q}$$
+
+其中$\{\varepsilon\}$为独立同分布零均值白噪声列，$\varepsilon_t$与$X_{t-1},X_{t-2},...$独立。$1-\phi_1z-\cdotp\cdotp\cdotp-\phi_pz^p$称为特征多项式，特征多项式的根都在单位园外，这是平稳性条件。一般要求$1+\theta_1z+\cdots+\theta_qz^q$的根也都在单位圆外，这个条件称为可逆性条件。两个多项式没有公共根，否则同一模型可能会有不同的表示。
+
+平稳解的均值为：
+
+$$EX_t=\frac{\phi_0}{1-\phi_1-\cdots-\phi_p}$$
+
+## ARMA 模型辨识
+
